@@ -1,0 +1,24 @@
+{
+  "name": "cuadra-server",
+  "version": "1.0.0",
+  "description": "api de plataforma cuadra",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cabreraTDP/cuadra-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cabreraTDP/cuadra-server/issues"
+  },
+  "homepage": "https://github.com/cabreraTDP/cuadra-server#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
