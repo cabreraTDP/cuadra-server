@@ -6,6 +6,6 @@ const { prueba } = require('./prueba')
 // @desc    Probar la api
 // @access  Private
 
-router.get('/', prueba);
+router.post('/', prueba);
 
 module.exports = router;
