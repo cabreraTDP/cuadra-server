@@ -1,10 +1,11 @@
 const Cliente = require('../../models/Cliente');
+const { createJWT } = require('../../utils/jwt');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const prueba = async(req, res) => {
+/* const prueba = async(req, res) => {
     console.log('Prueba');
 
     try {
@@ -21,9 +22,31 @@ const prueba = async(req, res) => {
     } catch(err) {
         res.status(400).json({error: err.message})
     }
+} */
+
+const prueba = (req, res) => {
+    console.log('Prueba exitosa');
+    res.status(400).json({msg: 'Satisfactorio'})
+}
+
+const auth = async(req,res) => {
+    console.log('Autenticación');
+    info = {
+        id: '200'
+    }
+    try {
+        const code = createJWT(info);
+
+        res.status(200).json({
+            code: code
+        })
+    } catch(err) {
+        res.status(400).json({error: err.message})
+    }
 }
 
 
 module.exports = {
-    prueba
+    prueba,
+    auth
 }
