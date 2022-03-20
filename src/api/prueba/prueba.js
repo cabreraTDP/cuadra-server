@@ -36,7 +36,7 @@ const auth = async(req,res) => {
     }
     try {
         const code = createJWT(info);
-
+        res.cookie('token', code, { httpOnly: true });
         res.status(200).json({
             code: code
         })
