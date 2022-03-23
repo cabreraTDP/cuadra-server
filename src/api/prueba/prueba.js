@@ -26,7 +26,7 @@ const { createJWT } = require('../../utils/jwt');
 
 const prueba = (req, res) => {
     console.log('Prueba exitosa');
-    res.status(400).json({msg: 'Satisfactorio'})
+    res.status(200).json({msg: 'Satisfactorio'})
 }
 
 const auth = async(req,res) => {
