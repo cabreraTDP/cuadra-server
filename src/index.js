@@ -1,6 +1,9 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cookieParser = require('cookie-parser')
+const cors = require('cors');
+
+
 
 require('dotenv').config('./');
 
@@ -13,6 +16,7 @@ const port = process.env.PORT || 7799;
 app.unsubscribe(express.static('public'));
 app.use(express.json({ extended: false}));
 app.use(cookieParser());
+app.use(cors());
 
 
 app.use('/prueba', require('./api/prueba/routes'))
