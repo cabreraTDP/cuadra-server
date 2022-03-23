@@ -3,7 +3,10 @@ const { MongoClient } = require('mongodb');
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
 
-
+const corsOptions = {
+    origin: ['http://localhost:3000','https://62339201afaf540008b002bc--distracted-goldberg-f360b4.netlify.app/',' https://objective-bohr-8da893.netlify.app/'],
+    credentials: true
+}
 
 require('dotenv').config('./');
 
@@ -16,7 +19,7 @@ const port = process.env.PORT || 7799;
 app.unsubscribe(express.static('public'));
 app.use(express.json({ extended: false}));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 app.use('/prueba', require('./api/prueba/routes'))
