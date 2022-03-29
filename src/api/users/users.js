@@ -2,6 +2,8 @@ const { encryptPassword, matchPassword } = require('../../utils/crypt')
 const User = require('../../models/User');
 const Cliente = require('../../models/Cliente');
 const mongoose = require('mongoose');
+const { createJWT } = require('../../utils/jwt');
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -48,7 +50,7 @@ const createUser = async(req, res) => {
 }
 
 
-const changePassword = async(req, res) => {
+const signIn = async(req, res) => {
 
     const {usuario, password} = req.body;
 
@@ -60,7 +62,46 @@ const changePassword = async(req, res) => {
         });
     };
 
-    const hashPassword = await encryptPassword(password);
+    const isPasswordCorrect = await matchPassword(password,existingUser.password);
+
+    if(!isPasswordCorrect){
+        res.status(400).json({
+            error: 'Password is incorrect.' 
+        });
+    };
+
+    info = {
+        id: existingUser._id
+    };
+
+    const code = createJWT(info);
+
+    res.cookie('token', code, { httpOnly: true });
+
+    res.status(200).json({
+        code 
+    });
+}
+
+const changePassword = async(req, res) => {
+
+    const {usuario, currentPassword, newPassword} = req.body;
+
+    const existingUser = await User.findOne({usuario});
+
+    if(!existingUser){
+        res.status(400).json({
+            error: 'User does not exist.' 
+        });
+    };
+
+    if(!matchPassword(currentPassword,existingUser.password)){
+        res.status(400).json({
+            error: 'Wrong password' 
+        });
+    }
+
+    const hashPassword = await encryptPassword(newPassword);
 
     existingUser.password = hashPassword;
 
@@ -74,5 +115,6 @@ const changePassword = async(req, res) => {
 module.exports = {
     prueba,
     createUser,
-    changePassword
+    changePassword,
+    signIn
 }
