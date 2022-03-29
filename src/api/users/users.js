@@ -69,7 +69,7 @@ const changePassword = async(req, res) => {
     res.status(200).json({
         Msg:'Success' 
     })
-}
+};
 
 module.exports = {
     prueba,
