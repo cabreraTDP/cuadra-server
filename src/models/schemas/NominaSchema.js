@@ -17,9 +17,8 @@ const NominaSchema = new mongoose.Schema({
     },
     detalle: {
         periodoInicio: Date,
-        priodoFin: Date,
+        periodoFin: Date,
         semana: Number,
-        creada: Date,
         total: Number
     },
     registros: [
