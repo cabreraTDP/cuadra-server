@@ -71,7 +71,8 @@ const signIn = async(req, res) => {
     };
 
     info = {
-        id: existingUser._id
+        id: existingUser._id,
+        cliente: existingUser.cliente
     };
 
     const code = createJWT(info);
