@@ -52,10 +52,19 @@ const createNomina = (req, res) => {
     })
 };
 
+const getNominabyCliente = (req, res) => {
 
+    const { user:idUsuario, cliente:idCliente } = req;
 
+    const nominas = Nomina.find({cliente: idCliente})
+
+    res.status(200).json({
+        data: nominas
+    })
+};
 
 module.exports = {
     prueba,
-    createNomina
+    createNomina,
+    getNominabyCliente
 }
