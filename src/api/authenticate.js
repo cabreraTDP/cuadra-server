@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
 
     if(token){
         const info = decodeJWT(token);
+        console.log(info)
         req.user = info.id;
         req.cliente = info.id;
 

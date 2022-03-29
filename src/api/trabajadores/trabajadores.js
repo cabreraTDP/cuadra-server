@@ -21,6 +21,10 @@ const createTrabajador = async(req, res) => {
 
     const { user:idUsuario, cliente:idCliente } = req;
 
+    console.log(req.user)
+
+    console.log(idCliente, idUsuario)
+
     const newTrabajador = new Trabajador({
         identificacion: {
             cliente: idCliente,

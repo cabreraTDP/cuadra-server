@@ -9,7 +9,7 @@ const prueba = (req, res) => {
     })
 };
 
-const createNomina = (req, res) => {
+const createNomina = async(req, res) => {
 
     const {
         periodoInicio, periodoFin, semana,

@@ -32,7 +32,7 @@ const prueba = (req, res) => {
 const auth = async(req,res) => {
     console.log('Autenticación');
     info = {
-        id: '200'
+        id: '624350ce6578baed23013d36'
     }
     try {
         const code = createJWT(info);
