@@ -47,6 +47,10 @@ const NominaSchema = new mongoose.Schema({
                 type: Number,
                 default: 0
             },
+            sueldoBruto:{
+                type: Number,
+                required: true
+            },
             totalPagar: {
                 type: Number,
                 required: true

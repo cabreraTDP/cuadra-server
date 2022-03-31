@@ -1,5 +1,13 @@
 const Nomina = require('../../models/Nomina');
 const Trabajador = require('../../models/Trabajador');
+const {getWeek, calcularISR, sumarArray} = require('../../utils/extras')
+
+const diasNaturales = {
+    'Semana': 7,
+    'Quincena': 15
+}
+
+const diasLaborados = (diastotales, faltas) => diastotales-faltas
 
 const prueba = (req, res) => {
     console.log('Prueba');
@@ -12,36 +20,49 @@ const prueba = (req, res) => {
 const createNomina = async(req, res) => {
 
     const {
-        periodoInicio, periodoFin, semana,
+        detalle,
         operaciones
     } = req.body;
 
     const { user:idUsuario, cliente:idCliente } = req;
 
+    detalle['periodoInicio'] = new Date(detalle.periodoInicio);
+    detalle['periodoFin'] = new Date(detalle.periodoFin);
 
-    //operaciones es un array
-    const registros = operaciones.map((operacion) => (
-        {
+    const semananomina = getWeek(detalle.periodoInicio)-1
+
+    detalle['semana'] = semananomina;
+
+    const {esquema} = detalle
+
+    const diasTotales = diasNaturales[esquema];
+
+    const registros = operaciones.map((operacion) => {
+        let dias = diasLaborados(diasTotales,operacion.dias);
+        let isr = calcularISR(operacion.sueldoBase*dias,esquema);
+        let sueldoBruto = operacion.sueldoBase*dias;
+        return ({
             trabajador: operacion.trabajador,
             sueldoBase: operacion.sueldoBase,
-            dias: operacion.dias,
+            dias: dias,
             complementos: operacion.complementos,
             rebajes: operacion.rebajes,
-            isr: (operacion.sueldoBase*operacion.dias)*0.1,
-            totalPagar: (operacion.sueldoBase*operacion.dias)+operacion.complementos-operacion.rebajes-(operacion.sueldoBase*operacion.dias)*0.1 //ISR
-        }
-    ));
+            isr: isr,
+            sueldoBruto: sueldoBruto,
+            totalPagar: sueldoBruto+operacion.complementos-operacion.rebajes-isr //ISR
+        })
+    });
+
+    const total = sumarArray(registros.map(registro => registro.totalPagar));
+
+    detalle['total'] = total;
 
     const newNomina = new Nomina({
         identificacion: {
             cliente: idCliente,
             usuario: idUsuario
         },
-        detalle: {
-            periodoInicio,
-            periodoFin,
-            semana
-        },
+        detalle,
         registros
     });
 
@@ -52,11 +73,12 @@ const createNomina = async(req, res) => {
     })
 };
 
-const getNominabyCliente = (req, res) => {
+const getNominabyCliente = async(req, res) => {
 
     const { user:idUsuario, cliente:idCliente } = req;
 
-    const nominas = Nomina.find({cliente: idCliente})
+    const nominas = await Nomina.find({cliente: idCliente})
+    
 
     res.status(200).json({
         data: nominas
