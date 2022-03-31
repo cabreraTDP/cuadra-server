@@ -35,6 +35,10 @@ const NominaSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+            faltas: {
+                type: Number,
+                required: true
+            },
             isr: {
                 type: Number,
                 required: true

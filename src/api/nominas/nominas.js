@@ -45,6 +45,7 @@ const createNomina = async(req, res) => {
             trabajador: operacion.trabajador,
             sueldoBase: operacion.sueldoBase,
             dias: dias,
+            faltas: operacion.dias,
             complementos: operacion.complementos,
             rebajes: operacion.rebajes,
             isr: isr,
@@ -85,8 +86,23 @@ const getNominabyCliente = async(req, res) => {
     })
 };
 
+const getNominaById = async(req, res) => {
+
+    const { user:idUsuario, cliente:idCliente } = req;
+    const {id} = req.body
+
+    const nominas = await Nomina.find({_id: id}).populate('registros.trabajador')
+    
+
+    res.status(200).json({
+        data: nominas
+    })
+};
+
+
 module.exports = {
     prueba,
     createNomina,
-    getNominabyCliente
+    getNominabyCliente,
+    getNominaById
 }
