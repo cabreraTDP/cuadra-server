@@ -77,7 +77,7 @@ const signIn = async(req, res) => {
     const code = createJWT(info);
 
 //.cookie('token', code, { httpOnly: true })
-    res.cookie('token', code, { httpOnly: true }).send('Cookie Set')
+    res.cookie('token', code, { httpOnly: true, SameSite:None, Secure}).send('Cookie Set')
 }
 
 const changePassword = async(req, res) => {
