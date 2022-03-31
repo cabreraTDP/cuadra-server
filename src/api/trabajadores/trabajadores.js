@@ -124,9 +124,19 @@ const editTrabajador = async(req, res) => {
     });
 }
 
+const getTrabajadores = async(req, res) => {
+    const { cliente:idCliente } = req;
+
+    const trabajadores = await Trabajador.find({cliente:idCliente});
+
+    res.status(200).json({
+        data: trabajadores 
+    });
+}
 
 module.exports = {
     prueba,
     createTrabajador,
-    editTrabajador
+    editTrabajador,
+    getTrabajadores
 }

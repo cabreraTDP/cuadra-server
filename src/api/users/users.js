@@ -57,15 +57,14 @@ const signIn = async(req, res) => {
     const existingUser = await User.findOne({usuario});
 
     if(!existingUser){
-        res.status(400).json({
+        return res.status(400).json({
             error: 'User does not exist.' 
         });
     };
-
     const isPasswordCorrect = await matchPassword(password,existingUser.password);
 
     if(!isPasswordCorrect){
-        res.status(400).json({
+        return res.status(400).json({
             error: 'Password is incorrect.' 
         });
     };
@@ -77,11 +76,8 @@ const signIn = async(req, res) => {
 
     const code = createJWT(info);
 
-    res.cookie('token', code, { httpOnly: true });
-
-    res.status(200).json({
-        code 
-    });
+//.cookie('token', code, { httpOnly: true })
+    res.cookie('token', code, { httpOnly: true }).send('Cookie Set')
 }
 
 const changePassword = async(req, res) => {
@@ -113,9 +109,16 @@ const changePassword = async(req, res) => {
     })
 };
 
+const checkUser = (req, res) => {
+    res.status(200).json({
+        Msg:'Success' 
+    });
+}
+
 module.exports = {
     prueba,
     createUser,
     changePassword,
-    signIn
+    signIn,
+    checkUser
 }
