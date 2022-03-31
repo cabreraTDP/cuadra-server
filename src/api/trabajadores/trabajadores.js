@@ -14,7 +14,7 @@ const prueba = (req, res) => {
 
 const createTrabajador = async(req, res) => {
 
-    const {nombre, apellidoMaterno, apellidoPaterno, nss, curp,
+    const {nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
            calle, numeroExterior, numeroInterior, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
@@ -36,6 +36,7 @@ const createTrabajador = async(req, res) => {
             apellidoPaterno,
             nss,
             curp,
+            rfc,
             direccion: {
                 calle,
                 numeroInterior,
@@ -66,7 +67,7 @@ const createTrabajador = async(req, res) => {
 
 const editTrabajador = async(req, res) => {
 
-    const {idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp,
+    const {idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
            calle, numeroExterior, numeroInterior, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
@@ -94,6 +95,7 @@ const editTrabajador = async(req, res) => {
             apellidoPaterno,
             nss,
             curp,
+            rfc,
             direccion: {
                 calle,
                 numeroInterior,

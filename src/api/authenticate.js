@@ -3,6 +3,8 @@ const { decodeJWT } = require('../utils/jwt');
 
 module.exports = (req, res, next) => {
     const token = req.cookies.token;
+    console.log('auth',token)
+
     if(token){
         const info = decodeJWT(token);
         req.user = info.id;
