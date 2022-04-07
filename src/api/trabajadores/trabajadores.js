@@ -164,12 +164,23 @@ const getTrabajadores = async(req, res) => {
     res.status(200).json({
         data: trabajadores 
     });
-}
+};
+
+const getTrabajador = async(req, res) => {
+    const { idTrabajador} = req.body;
+    console.log(idTrabajador)
+    const trabajador = await Trabajador.findOne({_id:idTrabajador});
+
+    res.status(200).json({
+        data: trabajador
+    });
+};
 
 module.exports = {
     prueba,
     createTrabajador,
     editTrabajador,
     getTrabajadores,
+    getTrabajador,
     uploadFile
 }
