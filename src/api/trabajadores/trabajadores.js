@@ -24,6 +24,7 @@ const uploadFile = async(req, res) => {
     console.log('Uploading');
 
     const file = req.file;
+    console.log(req.body)
     const {title, idTrabajador} = req.body;
 
     //buscar trabajador por id
@@ -42,6 +43,30 @@ const uploadFile = async(req, res) => {
     res.status(200).json({
         documento
     })
+};
+
+const downloadFile = async(req, res) => {
+    console.log('Downloading');
+
+
+    const {URI} = req.params;
+    const document = await download(URI);
+    //console.log(document.Body)
+    //res.send(document)
+    document.pipe(res)
+    //res.redirect(document)
+};
+
+const downloadFile = async(req, res) => {
+    console.log('Downloading');
+
+
+    const {URI} = req.params;
+    const document = await download(URI);
+    //console.log(document.Body)
+    //res.send(document)
+    document.pipe(res)
+    //res.redirect(document)
 };
 
 
@@ -104,17 +129,8 @@ const editTrabajador = async(req, res) => {
 
     const { user:idUsuario, cliente:idCliente } = req;
 
-    const trabajadorExists = Trabajador.findOne({
-        _id: idTrabajador
-    })
-
-    if(!trabajadorExists){
-        res.status(200).json({
-            error: 'Trabajador does not exist' 
-        });
-    }
-
-    const updateTrabajador = new Trabajador({
+    const search = { _id: idTrabajador };
+    const update = {
         identificacion: {
             cliente: idCliente,
             usuario: idUsuario
@@ -145,14 +161,13 @@ const editTrabajador = async(req, res) => {
             sueldo,
             ingreso
         }
-    })
+    }
 
-    trabajadorExists = updateTrabajador;
-
-    await trabajadorExists.save();
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
 
     res.status(200).json({
-        msg: 'Success' 
+        msg: 'Success' ,
+        trabajador
     });
 }
 
@@ -182,5 +197,6 @@ module.exports = {
     editTrabajador,
     getTrabajadores,
     getTrabajador,
-    uploadFile
+    uploadFile,
+    downloadFile
 }

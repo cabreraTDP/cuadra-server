@@ -1,7 +1,7 @@
 const S3 = require('aws-sdk/clients/s3');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-
+const mimeTypes = require('mime-types')
 const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
@@ -22,7 +22,7 @@ const uploading = multer({
         cb(null, {fieldName: file.fieldname});
       },
       key: function (req, file, cb) {
-        cb(null, file.fieldname.charAt(0) +  '-' +  Date.now().toString() );
+        cb(null, file.fieldname.charAt(0) +  '-' +  Date.now().toString() + "." + mimeTypes.extension(file.mimetype));
       }
     })
   });
@@ -35,6 +35,17 @@ const uploading = multer({
     }
 
     return s3.getObject(downloadParams).createReadStream();
-}
+  }
+  const download2 = async(fileKey) => {
+    const downloadParams = {
+      Key: fileKey,
+      Bucket: bucketName
+  }
+
+  const url = await s3.getSignedUrl('getObject', downloadParams);
+  console.log(url)
+  return url
+  }
+
 
   module.exports = {uploading, download}
