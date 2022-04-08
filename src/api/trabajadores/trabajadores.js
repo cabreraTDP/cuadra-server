@@ -57,19 +57,6 @@ const downloadFile = async(req, res) => {
     //res.redirect(document)
 };
 
-const downloadFile = async(req, res) => {
-    console.log('Downloading');
-
-
-    const {URI} = req.params;
-    const document = await download(URI);
-    //console.log(document.Body)
-    //res.send(document)
-    document.pipe(res)
-    //res.redirect(document)
-};
-
-
 const createTrabajador = async(req, res) => {
 
     const {nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
