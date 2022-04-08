@@ -41,7 +41,17 @@ const TrabajadorSchema = new mongoose.Schema({
         puesto: String,
         sueldo: String,
         ingreso: Date
-    }
+    },
+    documentos: [
+        {
+            titulo: String,
+            URI: String,
+            createdAt: {
+                type: Date,
+                default: Date.now()
+            }
+        }
+    ]
 })
 
 module.exports = TrabajadorSchema;
