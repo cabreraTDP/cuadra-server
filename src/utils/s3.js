@@ -43,7 +43,6 @@ const uploading = multer({
   }
 
   const url = await s3.getSignedUrl('getObject', downloadParams);
-  console.log(url)
   return url
   }
 
