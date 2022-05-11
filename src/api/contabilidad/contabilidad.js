@@ -1,4 +1,6 @@
-const PDFExtract = require('pdf.js-extract').PDFExtract;
+const {Ingresos} = require('../../utils/algorithms');
+const {PDFtoArray} = require('../../utils/extras');
+const Operacion = require('../../models/Operacion');
 
 const prueba = (req, res) => {
     console.log('Prueba');
@@ -8,43 +10,74 @@ const prueba = (req, res) => {
     })
 };
 
+const crearOperacion = async(req,res) => {
+    const { user:idUsuario, cliente:idCliente } = req;
+
+    const {titulo, descripcion, monto, tipo, categoria, fechaOperacion} = req.body;
+
+    const newOperacion = new Operacion({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        tipo,
+        categoria,
+        titulo,
+        descripcion,
+        monto,
+        fechaOperacion
+    });
+
+    const operacion = await newOperacion.save();
+
+    res.status(200).json({
+        data: operacion 
+    });
+};
+
+const getOperaciones = async(req,res) => {
+    const { cliente:idCliente } = req;
+
+    const operaciones = await Operacion.find({cliente:idCliente});
+
+    res.status(200).json({
+        data: operaciones
+    });
+};
+
 const uploadPDF = async(req,res) => {
+    const { user:idUsuario, cliente:idCliente } = req;
+
     //Get File
     const {file} = req.files;
 
+    const texto = await PDFtoArray(file);
 
-    //Set options for pdfExtract
-    const options = {
-        normalizeWhitespace: true
-    };
+    const resultado = Ingresos(texto);
 
-    const pdfExtract = new PDFExtract();
+    const operaciones = resultado.map((operacion) => ({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        tipo: operacion.tipo,
+        categoria: 'Ventas',
+        titulo: 'SAT',
+        descripcion: `Emitida para: ${operacion.receptor}`,
+        monto: operacion.total.replace('$','').replace(',',''),
+        fechaOperacion: operacion.fecha
+    }));
 
-    //Data is an array of pages, each page has a document for its content
-    const data = await pdfExtract.extractBuffer(file[0].buffer, options)
-
-    //get an array with content from pages in string
-    const contenido = data.pages.map((page) => page.content.map((content)=>content.str));
-
-    //Texto is an array of strings with the pdf content
-    let texto = []
-    let textoString = "";
-    contenido.forEach((page)=>
-        page.forEach((line) => {
-            if(line !== '' && line !== ' ') {
-                texto.push(line);
-                textoString += line + " ";
-            }
-        })
-    )
-    console.log(textoString)
+    const guardado = await Operacion.insertMany(operaciones);
 
     res.status(200).json({
-        modulo: "PDF"
+        data: guardado
     })
 }
 
 module.exports = {
     prueba,
-    uploadPDF
+    uploadPDF,
+    crearOperacion,
+    getOperaciones
 }
