@@ -35,6 +35,26 @@ const crearOperacion = async(req,res) => {
     });
 };
 
+const editarOperacion = async(req,res) => {
+
+    const {_id:id, titulo, descripcion, monto, tipo, categoria, fechaOperacion} = req.body;
+
+    const updatedOperacion = {
+        tipo,
+        categoria,
+        titulo,
+        descripcion,
+        monto,
+        fechaOperacion
+    };
+
+    const operacion = await Operacion.findByIdAndUpdate(id,updatedOperacion);
+    
+    res.status(200).json({
+        data: operacion 
+    });
+};
+
 const getOperaciones = async(req,res) => {
     const { cliente:idCliente } = req;
 
@@ -79,5 +99,6 @@ module.exports = {
     prueba,
     uploadPDF,
     crearOperacion,
+    editarOperacion,
     getOperaciones
 }
