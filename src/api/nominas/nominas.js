@@ -1,7 +1,8 @@
 const Nomina = require('../../models/Nomina');
+const Operacion = require('../../models/Operacion');
 const Trabajador = require('../../models/Trabajador');
 const {getWeek, calcularISR, sumarArray} = require('../../utils/extras')
-
+const moment = require('moment')
 const diasNaturales = {
     'Semana': 7,
     'Quincena': 15
@@ -67,7 +68,22 @@ const createNomina = async(req, res) => {
         registros
     });
 
-    await newNomina.save()
+    await newNomina.save();
+
+    const newOperacion = new Operacion({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        tipo:'Gasto',
+        categoria:'Sueldos',
+        titulo:'Pago de Nomina',
+        descripcion: `Nomina del ${moment(detalle.periodoInicio).format('DD-MM')} al ${moment(detalle.periodoFin).format('DD-MM')}`,
+        monto: detalle.total,
+        fechaOperacion: Date.now()
+    })
+
+    await newOperacion.save();
 
     res.status(200).json({
         msg: "Success"
