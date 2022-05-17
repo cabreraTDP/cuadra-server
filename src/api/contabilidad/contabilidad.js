@@ -55,6 +55,18 @@ const editarOperacion = async(req,res) => {
     });
 };
 
+const eliminarOperacion = async(req,res) => {
+    const { user:idUsuario, cliente:idCliente } = req;
+    const {id} = req.body;
+
+    const eliminar = await Operacion.findByIdAndDelete(id);
+
+    res.status(200).json({
+        data: eliminar 
+    });
+
+}
+
 const getOperaciones = async(req,res) => {
     const { cliente:idCliente } = req;
 
@@ -100,5 +112,6 @@ module.exports = {
     uploadPDF,
     crearOperacion,
     editarOperacion,
+    eliminarOperacion,
     getOperaciones
 }
