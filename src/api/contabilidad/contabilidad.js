@@ -1,6 +1,33 @@
-const {Ingresos} = require('../../utils/algorithms');
+const {Ingresos, Impuestos} = require('../../utils/algorithms');
 const {PDFtoArray} = require('../../utils/extras');
 const Operacion = require('../../models/Operacion');
+
+const constante = {
+    "emitida": (texto, idCliente, idUsuario) => Ingresos(texto).map((operacion) => ({
+                    identificacion: {
+                        cliente: idCliente,
+                        usuario: idUsuario
+                    },
+                    tipo: operacion.tipo,
+                    categoria: 'Ventas',
+                    titulo: 'SAT',
+                    descripcion: `Emitida para: ${operacion.receptor}`,
+                    monto: operacion.total.replace('$','').replace(',',''),
+                    fechaOperacion: operacion.fecha
+                })),
+    "impuestos": (texto, idCliente, idUsuario) => Impuestos(texto).map((operacion) => ({
+                    identificacion: {
+                        cliente: idCliente,
+                        usuario: idUsuario
+                    },
+                    tipo: operacion.tipo,
+                    categoria: 'Impuestos',
+                    titulo: 'SAT',
+                    descripcion: operacion.descripcion,
+                    monto: operacion.total,
+                    fechaOperacion: operacion.fecha
+                })),
+}
 
 const prueba = (req, res) => {
     console.log('Prueba');
@@ -79,26 +106,16 @@ const getOperaciones = async(req,res) => {
 
 const uploadPDF = async(req,res) => {
     const { user:idUsuario, cliente:idCliente } = req;
-
+    const {tipo} = req.body;
+    console.log('tipo',tipo)
     //Get File
     const {file} = req.files;
 
     const texto = await PDFtoArray(file);
 
-    const resultado = Ingresos(texto);
+    const operaciones = constante[tipo](texto,idCliente,idUsuario);
 
-    const operaciones = resultado.map((operacion) => ({
-        identificacion: {
-            cliente: idCliente,
-            usuario: idUsuario
-        },
-        tipo: operacion.tipo,
-        categoria: 'Ventas',
-        titulo: 'SAT',
-        descripcion: `Emitida para: ${operacion.receptor}`,
-        monto: operacion.total.replace('$','').replace(',',''),
-        fechaOperacion: operacion.fecha
-    }));
+    console.log('resultado',operaciones);
 
     const guardado = await Operacion.insertMany(operaciones);
 

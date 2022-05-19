@@ -1,3 +1,7 @@
+const moment = require("moment")
+const { monthToNumber } = require("./extras")
+
+
 const Ingresos = (texto) => {
     const listahora = []
     const total = []
@@ -95,13 +99,14 @@ const Impuestos = (texto) => {
     StringYear = "Ejercicio:"
     //En el archivo original de Py
     //El contenido de StringTotal es: "^a pagar:"
-    StringTotal = "Importe total a pagar:"
+    StringTotal = "a pagar:"
     StringISR = "Impuesto a cargo:"
     StringComplementaria = "Complementaria"
 
     Archivo = "Impuestos"
     for (let i = 0; i < texto.length; i++) {
         let line = texto[i];
+        console.log(i, line)
 
         if (StringComplementaria != null) {
             Archivo = "Salarios"
@@ -124,15 +129,16 @@ const Impuestos = (texto) => {
             contadorArchivo = 0
         };
         if (contadorISR == 1) {
-            listaISR.push(line)
+            listaISR.push(Number(line.replace('$','').replace(',','')))
             contadorISR = 0
         };
-        if (contadorTotales == 1) {
-            listaTotal.push(line)
-            contadorTotales = 0
+        if (contadorTotal == 1) {
+            listaTotal.push(Number(line.replace('$','').replace(',','')))
+            contadorTotal = 0
         };
 
         if (StringRFC === line) contadorRFC = 1
+        if (StringYear === line) contadorYear = 1
         if (StringMes === line) contadorMes = 1
         if (StringComplementaria === line) contadorArchivo = 1
         if (StringISR === line) contadorISR = 1
@@ -144,18 +150,65 @@ const Impuestos = (texto) => {
     for (let i = 0; i < listaArchivo.length; i++) {
         tipoArchivo = listaTipos[i]
         if (tipoArchivo == "Impuestos") {
-            ISR = parseInt(listaISR[i])
-            Total = parseInt(listaTotal[i])
-            listaIVA.push(Total - ISR)
+            listaIVA.push(listaTotal[i] - listaISR[i])
         }
         else {
             listaIVA.push(0)
             listaISR[i] = listaTotal[i]
         }
     }
+    console.log('archivo',listaArchivo)
+    console.log('totales',listaTotal)
+
+    let finales = [];
+
+    listaTotal.map((efecto, i) => {
+        if(listaIVA[i] > 0){
+            if(listaISR[i] > 0){
+                finales.push(
+                    {
+                        tipo: "Gasto",
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        total: listaIVA[i],
+                        descripcion: 'IVA'
+                    },
+                    {
+                        tipo: "Gasto",
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        total: listaISR[i],
+                        descripcion: 'ISR'
+                    }
+                )
+            }else{
+                finales.push(
+                    {
+                        tipo: "Gasto",
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        total: listaIVA[i],
+                        descripcion: 'IVA'
+                    }
+                )
+            }
+        }else{
+            if(listaISR[i] > 0){
+                finales.push(
+                    {
+                        tipo: "Gasto",
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        total: listaISR[i],
+                        descripcion: 'ISR'
+                    }
+                )
+            }
+        }
+    })
+    console.log('final',finales)
+    finales = finales.filter((objeto) => Object.keys(objeto).length > 0)
+
+    return finales
 }
-//ISR-IVA
-//
+
+
 
 
 module.exports = { Ingresos, Impuestos }
