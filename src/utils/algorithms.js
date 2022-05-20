@@ -128,11 +128,11 @@ const Impuestos = (texto) => {
             contadorArchivo = 0
         };
         if (contadorISR == 1) {
-            listaISR.push(Number(line.replace('$','').replace(',','')))
+            listaISR.push(Number(line.replace('$', '').replace(',', '')))
             contadorISR = 0
         };
         if (contadorTotal == 1) {
-            listaTotal.push(Number(line.replace('$','').replace(',','')))
+            listaTotal.push(Number(line.replace('$', '').replace(',', '')))
             contadorTotal = 0
         };
 
@@ -160,38 +160,38 @@ const Impuestos = (texto) => {
     let finales = [];
 
     listaTotal.map((efecto, i) => {
-        if(listaIVA[i] > 0){
-            if(listaISR[i] > 0){
+        if (listaIVA[i] > 0) {
+            if (listaISR[i] > 0) {
                 finales.push(
                     {
                         tipo: "Gasto",
-                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`, 'MM-YYYY').format(),
                         total: listaIVA[i],
                         descripcion: 'IVA'
                     },
                     {
                         tipo: "Gasto",
-                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`, 'MM-YYYY').format(),
                         total: listaISR[i],
                         descripcion: 'ISR'
                     }
                 )
-            }else{
+            } else {
                 finales.push(
                     {
                         tipo: "Gasto",
-                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`, 'MM-YYYY').format(),
                         total: listaIVA[i],
                         descripcion: 'IVA'
                     }
                 )
             }
-        }else{
-            if(listaISR[i] > 0){
+        } else {
+            if (listaISR[i] > 0) {
                 finales.push(
                     {
                         tipo: "Gasto",
-                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`,'MM-YYYY').format(),
+                        fecha: moment(`${monthToNumber[listaMes[i]]}-${listaYear[i]}`, 'MM-YYYY').format(),
                         total: listaISR[i],
                         descripcion: 'ISR'
                     }
@@ -239,7 +239,7 @@ const IMSS = (texto) => {
 
 
 
-    IMSS1 = "SISTEMA ÚNICO DE AUTODETERMINACIÓNV"
+    let IMSS1 = new RegExp("SISTEMA ÚNICO DE AUTODETERMINACIÓNV");
     totalIMSS1text = "Total a pagar: "
     const totalIMSS11text = "Total a pagar: \d*\D+\d*\D+\d*"
 
@@ -262,7 +262,7 @@ const IMSS = (texto) => {
     datos = []
     registros = []
     tipos = []
-    fechas = []
+    const fechas = []
     empresas = []
     registrosunicos = []
     nombres = []
@@ -289,18 +289,18 @@ const IMSS = (texto) => {
     cuentaIMSS3 = 1
     cuentaFecha = 0
     nuevodigito = 0
-    const  archivo = "";
-    const nombrearchivo="";
-    const dato="";
-    const a = toString(os.path.join(name));
-    const fechalinea=0;
-    const registroPatronal="";
-    for (let line = 0; line < texto.length; i++) {
-        const ResIMSS1 = re.search(IMSS1, line);
-        const ResIMSS11 = re.search(totalIMSS11text, line);
-        const ResIMSS2 = re.search(IMSS2, line);
-        const ResIMSS3 = re.search(IMSS3, line);
-        const ResIMSS4 = re.search(IMSS4, line);
+    const archivo = "";
+    const nombrearchivo = "";
+    const dato = "";
+    const fechalinea = 0;
+    const registroPatronal = "";
+    for (let i = 0; i < texto.length; i++) {
+        let line = texto[i];
+        ResIMSS1 = line.match(IMSS1);
+        const ResIMSS11 = line.match(totalIMSS11text);
+        const ResIMSS2 = line.match(IMSS2);
+        const ResIMSS3 = line.match(IMSS3);
+        const ResIMSS4 = line.match(IMSS4);
         if (contador == 0) {
             if (ResIMSS1 != null) {
                 archivo = "IMSS1"
@@ -354,9 +354,7 @@ const IMSS = (texto) => {
             }
             if (cuentaIMSS2 == 8) {
                 //Detalle variable a
-                a = re.search("^.*\d", line)
-                registroPatronal = a.groupBy(0);
-                registrosunicos.push(registroPatronal);
+                
             }
             if (ResTotalIMSS2 != null) {
                 contarlineas = 1;
@@ -371,7 +369,6 @@ const IMSS = (texto) => {
             };
             cuentaIMSS3 = cuentaIMSS3 + 1;
             if (cuentaIMSS3 == 8) {
-                a = re.search("^.*\d", line);
                 registroPatronal = a.groupBy(0);
             }
 
@@ -387,7 +384,7 @@ const IMSS = (texto) => {
                     fecha = re.search(" .*", fecha.groupBy(0));
                     fecha = fecha.groupBy(0);
                 } else {
-                    fecha = toString(nombre);
+                    //fecha = toString(nombre);
                 }
                 const total2 = ResTotalIMSS4.groupBy(0);
                 const saldototal2 = re.search("\d.*", total2);
@@ -398,7 +395,7 @@ const IMSS = (texto) => {
                     registroPatronal = registroPatronal.groupBy(0);
                 }
                 else {
-                    registroPatronal = toString(nombre);
+                    //registroPatronal = toString(nombre);
                 };
             }
 
@@ -409,16 +406,13 @@ const IMSS = (texto) => {
         if (contarlineas == 5) {
             totalIMSS2 = line;
             //Detalle en variable a
-            a = re.search("\d*.*\d*\.\d+", line);
-            dato = a.groupBy(0);
         };
         if (contarlineas2 > 0) {
             contarlineas2 = contarlineas2 + 1;
         }
         if (contarlineas2 == 3) {
             totalIMSS3 = line;
-            a = re.search("\d*.*\d*\.\d+", line);
-            dato = a.groupBy(0);
+           
         }
         if (cuentaFecha > 0) {
             cuentaFecha = cuentaFecha + 1;
@@ -457,23 +451,23 @@ const IMSS = (texto) => {
         //print(nuevodigito)
         fecha = toString(nuevodigito) + (fecha1.groupBy(0));
     }
-    if (re.search("\w", dato) == null) {
-        dato = parseFloat(dato.replace(",", ""));
+    if (dato.match("\w") == null) {
+        //dato = parseFloat(dato.replace(",", ""));
     };
 
     datos.push(dato);
     registros.push(registroPatronal);
     tipos.push(nombrearchivo);
     fechas.push(fecha);
-    nombres.push(toString(os.path.join(name)));
+    nombres.push('sin nombre');
     count += 1
 
 }
 function mes(fecha) {
     const texto = re.search("..", fecha);
-    const fechaFinal="";
+    const fechaFinal = "";
     if (texto == null) {
-         fechaFinal = fecha;
+        fechaFinal = fecha;
     }
     else {
         texto = texto.groupBy(0);
