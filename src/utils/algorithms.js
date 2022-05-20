@@ -106,7 +106,6 @@ const Impuestos = (texto) => {
     Archivo = "Impuestos"
     for (let i = 0; i < texto.length; i++) {
         let line = texto[i];
-        console.log(i, line)
 
         if (StringComplementaria != null) {
             Archivo = "Salarios"
@@ -157,8 +156,6 @@ const Impuestos = (texto) => {
             listaISR[i] = listaTotal[i]
         }
     }
-    console.log('archivo',listaArchivo)
-    console.log('totales',listaTotal)
 
     let finales = [];
 
@@ -202,7 +199,6 @@ const Impuestos = (texto) => {
             }
         }
     })
-    console.log('final',finales)
     finales = finales.filter((objeto) => Object.keys(objeto).length > 0)
 
     return finales
