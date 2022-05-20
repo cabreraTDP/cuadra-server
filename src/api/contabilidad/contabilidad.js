@@ -107,15 +107,13 @@ const getOperaciones = async(req,res) => {
 const uploadPDF = async(req,res) => {
     const { user:idUsuario, cliente:idCliente } = req;
     const {tipo} = req.body;
-    console.log('tipo',tipo)
+
     //Get File
     const {file} = req.files;
 
     const texto = await PDFtoArray(file);
 
     const operaciones = constante[tipo](texto,idCliente,idUsuario);
-
-    console.log('resultado',operaciones);
 
     const guardado = await Operacion.insertMany(operaciones);
 
