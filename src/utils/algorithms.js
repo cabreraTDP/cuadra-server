@@ -58,7 +58,6 @@ const Ingresos = (texto) => {
 
     };
 
-
     return (
         listahora.map((efecto, i) => {
             if (efecto === "Ingreso") {
@@ -76,6 +75,7 @@ const Ingresos = (texto) => {
     )
 
 }
+
 const Impuestos = (texto) => {
     listaRFC = []
     listaMes = []
@@ -204,7 +204,11 @@ const Impuestos = (texto) => {
     return finales
 }
 
+const IMSS = (texto) => {
+
+}
 
 
 
-module.exports = { Ingresos, Impuestos }
+
+module.exports = { Ingresos, Impuestos,IMSS }

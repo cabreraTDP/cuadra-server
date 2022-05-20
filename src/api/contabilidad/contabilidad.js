@@ -1,4 +1,4 @@
-const {Ingresos, Impuestos} = require('../../utils/algorithms');
+const {Ingresos, Impuestos, IMSS} = require('../../utils/algorithms');
 const {PDFtoArray} = require('../../utils/extras');
 const Operacion = require('../../models/Operacion');
 
@@ -27,6 +27,7 @@ const constante = {
                     monto: operacion.total,
                     fechaOperacion: operacion.fecha
                 })),
+    "social": (texto, idCliente, idUsuario) => IMSS(texto)
 }
 
 const prueba = (req, res) => {
