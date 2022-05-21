@@ -15,6 +15,18 @@ const constante = {
                     monto: operacion.total.replace('$','').replace(',',''),
                     fechaOperacion: operacion.fecha
                 })),
+    "recibida": (texto, idCliente, idUsuario) => Ingresos(texto).map((operacion) => ({
+                    identificacion: {
+                        cliente: idCliente,
+                        usuario: idUsuario
+                    },
+                    tipo: operacion.tipo,
+                    categoria: 'Ventas',
+                    titulo: 'SAT',
+                    descripcion: `Emitida para: ${operacion.receptor}`,
+                    monto: operacion.total.replace('$','').replace(',',''),
+                    fechaOperacion: operacion.fecha
+                })),
     "impuestos": (texto, idCliente, idUsuario) => Impuestos(texto).map((operacion) => ({
                     identificacion: {
                         cliente: idCliente,
@@ -27,7 +39,18 @@ const constante = {
                     monto: operacion.total,
                     fechaOperacion: operacion.fecha
                 })),
-    "social": (texto, idCliente, idUsuario) => IMSS(texto)
+    "social": (texto, idCliente, idUsuario) => IMSS(texto).map((operacion) => ({
+                    identificacion: {
+                        cliente: idCliente,
+                        usuario: idUsuario
+                    },
+                    tipo: "Gasto",
+                    categoria: 'Impuestos',
+                    titulo: 'SAT',
+                    descripcion: operacion.nombrearchivo,
+                    monto: operacion.dato,
+                    fechaOperacion: operacion.fecha
+    }))
 }
 
 const prueba = (req, res) => {
