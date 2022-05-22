@@ -223,4 +223,8 @@ const getWeek = function (date) {
         'Diciembre':12
     }
 
-    module.exports={getWeek, calcularISR, sumarArray, PDFtoArray, monthToNumber};
+    const primaDominical = (sueldo,dias) => {
+        return sueldo*0.25*dias
+    }
+
+    module.exports={getWeek, calcularISR, sumarArray, PDFtoArray, monthToNumber,primaDominical};
