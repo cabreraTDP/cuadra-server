@@ -2,6 +2,31 @@ const {Ingresos, Impuestos, IMSS} = require('../../utils/algorithms');
 const {PDFtoArray} = require('../../utils/extras');
 const Operacion = require('../../models/Operacion');
 
+//prueba pdf
+const pdfPrinter=require("pdfmake");
+const fs =require('fs');
+const fonts = require ('../pdf/fonts');
+const style = require ('../pdf/style');
+const {content} = require ('../pdf/pdfContent');
+
+let docDefinition={
+    content: content,
+    style:style
+};
+const printer = new pdfPrinter(fonts);
+
+let pdfDoc = printer.createPdfKitDocument(docDefinition);
+pdfDoc.pipe(fs.createWriteStream('pdfs/pdfTest.pdf'));
+pdfDoc.end();
+
+
+//funcion para crear pdf
+const generarPDF={
+    
+}
+
+
+
 const constante = {
     "emitida": (texto, idCliente, idUsuario) => Ingresos(texto).map((operacion) => ({
                     identificacion: {
