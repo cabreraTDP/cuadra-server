@@ -1,3 +1,5 @@
+const PDFExtract = require('pdf.js-extract').PDFExtract;
+
 const getWeek = function (date) {
     /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
     
@@ -179,4 +181,50 @@ const getWeek = function (date) {
         return array.reduce((prev,current)=>Number(prev)+Number(current),initial);
     }
 
-    module.exports={getWeek, calcularISR, sumarArray};
+    const PDFtoArray = async(file) => {
+        //Set options for pdfExtract
+        const options = {
+            normalizeWhitespace: true
+        };
+
+        const pdfExtract = new PDFExtract();
+
+        //Data is an array of pages, each page has a document for its content
+        const data = await pdfExtract.extractBuffer(file[0].buffer, options)
+
+        //get an array with content from pages in string
+        const contenido = data.pages.map((page) => page.content.map((content)=>content.str));
+
+        //Texto is an array of strings with the pdf content
+        let texto = []
+        contenido.forEach((page)=>
+            page.forEach((line) => {
+                if(line !== '' && line !== ' ') {
+                    texto.push(line);
+                }
+            })
+        );
+
+        return texto
+    }
+
+    const monthToNumber = {
+        'Enero': 1,
+        'Febrero': 2,
+        'Marzo': 3,
+        'Abril': 4,
+        'Mayo': 5,
+        'Junio': 6,
+        'Julio': 7,
+        'Agosto': 8,
+        'Septiembre': 9,
+        'Octubre': 10,
+        'Noviembre': 11,
+        'Diciembre':12
+    }
+
+    const primaDominical = (sueldo,dias) => {
+        return sueldo*0.25*dias
+    }
+
+    module.exports={getWeek, calcularISR, sumarArray, PDFtoArray, monthToNumber,primaDominical};

@@ -24,7 +24,6 @@ const uploadFile = async(req, res) => {
     console.log('Uploading');
 
     const file = req.file;
-    console.log(req.body)
     const {title, idTrabajador} = req.body;
 
     //buscar trabajador por id
