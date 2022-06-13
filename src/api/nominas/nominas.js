@@ -42,6 +42,10 @@ const createNomina = async(req, res) => {
         let dias = diasLaborados(diasTotales,operacion.dias);
         let isr = calcularISR(operacion.sueldoBase*dias,esquema);
         let sueldoBruto = operacion.sueldoBase*dias;
+        let extras = [];
+        if(operacion["Horas Extras"])extras.push({"Horas Extras":operacion["Horas Extras"]*operacion.sueldoBase})
+        if(operacion["Domingos Trabajados"])extras.push({"Domingos Trabajados": primaDominical(operacion["Domingos Trabajados"])})
+
         return ({
             trabajador: operacion.trabajador,
             sueldoBase: operacion.sueldoBase,
@@ -51,6 +55,7 @@ const createNomina = async(req, res) => {
             rebajes: operacion.rebajes,
             isr: isr,
             sueldoBruto: sueldoBruto,
+            extras,
             totalPagar: sueldoBruto+operacion.complementos-operacion.rebajes-isr //ISR
         })
     });
