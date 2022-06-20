@@ -1,5 +1,8 @@
 const Trabajador = require('../../models/Trabajador');
-const {download } = require('../../utils/s3')
+const {download } = require('../../utils/s3');
+const {template} = require('./contrato');
+const pdf = require('html-pdf');
+const hbs = require('hbs');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -177,6 +180,24 @@ const getTrabajador = async(req, res) => {
     });
 };
 
+const crearContrato = async(req, res) => {
+    const {mensaje} = req.body;
+    
+    const data = {
+        msg:mensaje
+    }
+
+    const html = await hbs.compile(template)(data);
+    
+    pdf.create(html).toBuffer(function(err, buffer){
+        res.status(200).json({
+            data: buffer
+        });
+    });
+
+
+}
+
 module.exports = {
     prueba,
     createTrabajador,
@@ -184,5 +205,6 @@ module.exports = {
     getTrabajadores,
     getTrabajador,
     uploadFile,
-    downloadFile
+    downloadFile,
+    crearContrato
 }
