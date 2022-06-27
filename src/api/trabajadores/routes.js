@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../authenticate');
-const { prueba, createTrabajador, editTrabajador, getTrabajadores, getTrabajador, uploadFile, downloadFile } = require('./trabajadores')
+const { prueba, createTrabajador, editTrabajador, getTrabajadores, getTrabajador, uploadFile, downloadFile, crearContrato } = require('./trabajadores')
 const { uploading } = require('../../utils/s3');
 
 // @route   POST api/prueba
@@ -17,6 +17,7 @@ router.get('/', authenticate, getTrabajadores);
 router.post('/add',  authenticate, createTrabajador);
 router.post('/edit', authenticate, editTrabajador);
 router.post('/getTrabajador', authenticate, getTrabajador);
+router.post('/crearContrato', crearContrato);
 
 
 

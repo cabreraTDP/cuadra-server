@@ -1,5 +1,8 @@
 const Trabajador = require('../../models/Trabajador');
-const {download } = require('../../utils/s3')
+const {download } = require('../../utils/s3');
+const {template} = require('./contrato');
+const pdf = require('html-pdf');
+const hbs = require('hbs');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -177,6 +180,66 @@ const getTrabajador = async(req, res) => {
     });
 };
 
+const crearContrato = async(req, res) => {
+    const {
+            mensaje,
+            patron,
+            representante_legal,
+            nombre_empleado,
+            rfc_representante,
+            direccion_representante,
+            principal_actividad,
+            sexo,
+            fecha_nacimiento,
+            nss,
+            rfc,
+            curp,
+            direccion_empleado,
+            salario_texto,
+            esquema_pago,
+            fecha_contrato
+    } = req.body;
+    
+    const data = {
+        msg:mensaje,
+        patron,
+        representante_legal,
+        nombre_empleado,
+        rfc_representante,
+        direccion_representante,
+        principal_actividad,
+        sexo,
+        fecha_nacimiento,
+        nss,
+        rfc,
+        curp,
+        direccion_empleado,
+        salario_texto,
+        esquema_pago,
+        fecha_contrato
+    }
+
+    const html = await hbs.compile(template)(data);
+
+    const config = {
+        "format": "A4",
+        "border": {
+            "top": "1.27cm",            
+            "right": "1.27cm",
+            "bottom": "1.27cm",
+            "left": "1.27cm"
+          },
+    }
+    
+    pdf.create(html, config).toBuffer(function(err, buffer){
+        res.status(200).json({
+            data: buffer
+        });
+    });
+
+
+}
+
 module.exports = {
     prueba,
     createTrabajador,
@@ -184,5 +247,6 @@ module.exports = {
     getTrabajadores,
     getTrabajador,
     uploadFile,
-    downloadFile
+    downloadFile,
+    crearContrato
 }
