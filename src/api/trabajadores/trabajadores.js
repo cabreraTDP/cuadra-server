@@ -172,7 +172,6 @@ const getTrabajadores = async(req, res) => {
 
 const getTrabajador = async(req, res) => {
     const { idTrabajador} = req.body;
-    console.log(idTrabajador)
     const trabajador = await Trabajador.findOne({_id:idTrabajador});
 
     res.status(200).json({
@@ -182,7 +181,6 @@ const getTrabajador = async(req, res) => {
 
 const crearContrato = async(req, res) => {
     const {
-            mensaje,
             patron,
             representante_legal,
             nombre_empleado,
@@ -201,12 +199,11 @@ const crearContrato = async(req, res) => {
     } = req.body;
     
     const data = {
-        msg:mensaje,
         patron,
         representante_legal,
-        nombre_empleado,
         rfc_representante,
         direccion_representante,
+        nombre_empleado,
         principal_actividad,
         sexo,
         fecha_nacimiento,
