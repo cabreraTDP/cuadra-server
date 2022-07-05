@@ -51,7 +51,11 @@ const TrabajadorSchema = new mongoose.Schema({
                 default: Date.now()
             }
         }
-    ]
+    ],
+    activo: {
+        type: Boolean,
+        required: true
+    }
 })
 
 module.exports = TrabajadorSchema;

@@ -99,7 +99,8 @@ const createTrabajador = async(req, res) => {
             puesto,
             sueldo,
             ingreso
-        }
+        },
+        activo: true
     })
 
     const trabajador = await newTrabajador.save();
@@ -160,10 +161,25 @@ const editTrabajador = async(req, res) => {
     });
 }
 
+const deleteTrabajador = async(req,res) => {
+    const { cliente:idCliente } = req;
+    const { idTrabajador} = req.body;
+
+    const search = { _id: idTrabajador };
+    const update = { activo: false };
+
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+
+    res.status(200).json({
+        msg: 'Success' ,
+        trabajador
+    });
+};
+
 const getTrabajadores = async(req, res) => {
     const { cliente:idCliente } = req;
 
-    const trabajadores = await Trabajador.find({cliente:idCliente});
+    const trabajadores = await Trabajador.find({cliente:idCliente, activo:true});
 
     res.status(200).json({
         data: trabajadores 
@@ -243,6 +259,7 @@ module.exports = {
     editTrabajador,
     getTrabajadores,
     getTrabajador,
+    deleteTrabajador,
     uploadFile,
     downloadFile,
     crearContrato
