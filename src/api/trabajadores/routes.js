@@ -8,7 +8,8 @@ const { prueba,
     getTrabajador, 
     deleteTrabajador,
     uploadFile, 
-    downloadFile, 
+    downloadFile,
+    subirFotoPerfil, 
     crearContrato } = require('./trabajadores')
 const { uploading } = require('../../utils/s3');
 
@@ -25,6 +26,8 @@ router.get('/', authenticate, getTrabajadores);
 router.post('/add',  authenticate, createTrabajador);
 router.post('/edit', authenticate, editTrabajador);
 router.post('/getTrabajador', authenticate, getTrabajador);
+router.post('/subirFotoPerfil', uploading.single('file'), subirFotoPerfil);
+
 router.post('/deleteTrabajador', authenticate, deleteTrabajador);
 router.post('/crearContrato',authenticate, crearContrato);
 

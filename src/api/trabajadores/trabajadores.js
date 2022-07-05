@@ -23,6 +23,23 @@ const prueba = (req, res) => {
     })
 };
 
+const subirFotoPerfil = async(req, res) => {
+
+    const file = req.file;
+    const { idTrabajador} = req.body;
+
+    //buscar trabajador por id
+    const search = { name: idTrabajador };
+
+    const update = { foto: file.key };
+
+    await Trabajador.findOneAndUpdate(search, update);
+
+    res.status(200).json({
+        update
+    })
+};
+
 const uploadFile = async(req, res) => {
     console.log('Uploading');
 
@@ -260,6 +277,7 @@ module.exports = {
     getTrabajadores,
     getTrabajador,
     deleteTrabajador,
+    subirFotoPerfil,
     uploadFile,
     downloadFile,
     crearContrato

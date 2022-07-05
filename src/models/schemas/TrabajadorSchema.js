@@ -55,7 +55,11 @@ const TrabajadorSchema = new mongoose.Schema({
     activo: {
         type: Boolean,
         required: true
+    },
+    foto: {
+        type: String
     }
+
 })
 
 module.exports = TrabajadorSchema;
