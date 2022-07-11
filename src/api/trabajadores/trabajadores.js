@@ -69,7 +69,7 @@ const uploadFile = async(req, res) => {
 const downloadFile = async(req, res) => {
     const {URI} = req.params;
     const document = await download(URI);
-    console.log(URI)
+
     //console.log(document.Body)
     //res.send(document)
     document.pipe(res)
