@@ -27,13 +27,15 @@ const subirFotoPerfil = async(req, res) => {
 
     const file = req.file;
     const { idTrabajador} = req.body;
+    console.log('req',idTrabajador)
 
     //buscar trabajador por id
-    const search = { name: idTrabajador };
+    const search = { _id: idTrabajador };
 
     const update = { foto: file.key };
 
-    await Trabajador.findOneAndUpdate(search, update);
+    const new2 = await Trabajador.findOneAndUpdate(search, update);
+    console.log(new2);
 
     res.status(200).json({
         update
@@ -65,11 +67,9 @@ const uploadFile = async(req, res) => {
 };
 
 const downloadFile = async(req, res) => {
-    console.log('Downloading');
-
-
     const {URI} = req.params;
     const document = await download(URI);
+    console.log(URI)
     //console.log(document.Body)
     //res.send(document)
     document.pipe(res)
