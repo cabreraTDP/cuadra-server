@@ -79,7 +79,7 @@ const downloadFile = async(req, res) => {
 const createTrabajador = async(req, res) => {
 
     const {nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
-           calle, numeroExterior, numeroInterior, codigoPostal, municipio, estado,
+           calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
 
@@ -102,6 +102,7 @@ const createTrabajador = async(req, res) => {
                 calle,
                 numeroInterior,
                 numeroExterior,
+                colonia,
                 codigoPostal,
                 municipio,
                 estado
@@ -130,7 +131,7 @@ const createTrabajador = async(req, res) => {
 const editTrabajador = async(req, res) => {
 
     const {idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
-           calle, numeroExterior, numeroInterior, codigoPostal, municipio, estado,
+           calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
 
@@ -153,6 +154,7 @@ const editTrabajador = async(req, res) => {
                 calle,
                 numeroInterior,
                 numeroExterior,
+                colonia,
                 codigoPostal,
                 municipio,
                 estado
