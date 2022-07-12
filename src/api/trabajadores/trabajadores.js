@@ -3,6 +3,7 @@ const {download } = require('../../utils/s3');
 const {template} = require('./contrato');
 const pdf = require('html-pdf');
 const hbs = require('hbs');
+const Movimiento = require('../../models/Movimiento');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -119,9 +120,20 @@ const createTrabajador = async(req, res) => {
             ingreso
         },
         activo: true
-    })
+    });
 
     const trabajador = await newTrabajador.save();
+
+    const newMovimiento = new Movimiento({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        trabajador: trabajador._id,
+        movimiento: 'Alta'
+    });
+
+    await newMovimiento.save();
 
     res.status(200).json({
         trabajador 
@@ -189,6 +201,43 @@ const deleteTrabajador = async(req,res) => {
 
     const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
 
+    const newMovimiento = new Movimiento({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        trabajador: idTrabajador,
+        movimiento: 'Baja'
+    });
+
+    await newMovimiento.save();
+
+    res.status(200).json({
+        msg: 'Success' ,
+        trabajador
+    });
+};
+
+const altaTrabajador = async(req,res) => {
+    const { cliente:idCliente } = req;
+    const { idTrabajador} = req.body;
+
+    const search = { _id: idTrabajador };
+    const update = { activo: true };
+
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+
+    const newMovimiento = new Movimiento({
+        identificacion: {
+            cliente: idCliente,
+            usuario: idUsuario
+        },
+        trabajador: idTrabajador,
+        movimiento: 'Alta'
+    });
+
+    await newMovimiento.save();
+
     res.status(200).json({
         msg: 'Success' ,
         trabajador
@@ -199,6 +248,16 @@ const getTrabajadores = async(req, res) => {
     const { cliente:idCliente } = req;
 
     const trabajadores = await Trabajador.find({cliente:idCliente, activo:true});
+
+    res.status(200).json({
+        data: trabajadores 
+    });
+};
+
+const getBajas = async(req, res) => {
+    const { cliente:idCliente } = req;
+
+    const trabajadores = await Trabajador.find({cliente:idCliente, activo:false});
 
     res.status(200).json({
         data: trabajadores 
@@ -277,8 +336,10 @@ module.exports = {
     createTrabajador,
     editTrabajador,
     getTrabajadores,
+    getBajas,
     getTrabajador,
     deleteTrabajador,
+    altaTrabajador,
     subirFotoPerfil,
     uploadFile,
     downloadFile,

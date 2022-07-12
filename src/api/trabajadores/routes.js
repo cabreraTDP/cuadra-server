@@ -5,8 +5,10 @@ const { prueba,
     createTrabajador, 
     editTrabajador, 
     getTrabajadores, 
+    getBajas,
     getTrabajador, 
     deleteTrabajador,
+    altaTrabajador,
     uploadFile, 
     downloadFile,
     subirFotoPerfil, 
@@ -23,12 +25,14 @@ router.get('/downloadFile/:URI', downloadFile);
 
 
 router.get('/', authenticate, getTrabajadores);
+router.get('/bajas', authenticate, getBajas);
 router.post('/add',  authenticate, createTrabajador);
 router.post('/edit', authenticate, editTrabajador);
 router.post('/getTrabajador', authenticate, getTrabajador);
 router.post('/subirFotoPerfil', uploading.single('file'), subirFotoPerfil);
 
 router.post('/deleteTrabajador', authenticate, deleteTrabajador);
+router.post('/altaTrabajador', authenticate, altaTrabajador);
 router.post('/crearContrato',authenticate, crearContrato);
 
 
