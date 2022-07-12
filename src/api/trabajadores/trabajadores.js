@@ -130,7 +130,8 @@ const createTrabajador = async(req, res) => {
             usuario: idUsuario
         },
         trabajador: trabajador._id,
-        movimiento: 'Alta'
+        movimiento: 'Alta',
+        fecha: ingreso
     });
 
     await newMovimiento.save();
@@ -194,7 +195,7 @@ const editTrabajador = async(req, res) => {
 
 const deleteTrabajador = async(req,res) => {
     const { cliente:idCliente } = req;
-    const { idTrabajador} = req.body;
+    const { idTrabajador, fechaMovimiento} = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: false };
@@ -207,7 +208,8 @@ const deleteTrabajador = async(req,res) => {
             usuario: idUsuario
         },
         trabajador: idTrabajador,
-        movimiento: 'Baja'
+        movimiento: 'Baja',
+        fecha: fechaMovimiento
     });
 
     await newMovimiento.save();
@@ -220,7 +222,7 @@ const deleteTrabajador = async(req,res) => {
 
 const altaTrabajador = async(req,res) => {
     const { cliente:idCliente } = req;
-    const { idTrabajador} = req.body;
+    const { idTrabajador, fechaMovimiento} = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: true };
@@ -233,7 +235,8 @@ const altaTrabajador = async(req,res) => {
             usuario: idUsuario
         },
         trabajador: idTrabajador,
-        movimiento: 'Alta'
+        movimiento: 'Alta',
+        fecha: fechaMovimiento
     });
 
     await newMovimiento.save();
