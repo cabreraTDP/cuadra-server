@@ -194,7 +194,7 @@ const editTrabajador = async(req, res) => {
 }
 
 const deleteTrabajador = async(req,res) => {
-    const { cliente:idCliente } = req;
+    const { cliente:idCliente,  user:idUsuario, } = req;
     const { idTrabajador, fechaMovimiento} = req.body;
 
     const search = { _id: idTrabajador };
