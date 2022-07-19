@@ -4,6 +4,7 @@ const {template} = require('./contrato');
 const pdf = require('html-pdf');
 const hbs = require('hbs');
 const Movimiento = require('../../models/Movimiento');
+const moment = require('moment');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -79,7 +80,7 @@ const downloadFile = async(req, res) => {
 
 const createTrabajador = async(req, res) => {
 
-    const {nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
+    const {ID, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
            calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
@@ -99,6 +100,8 @@ const createTrabajador = async(req, res) => {
             nss,
             curp,
             rfc,
+            estadoCivil,
+            sexo,
             direccion: {
                 calle,
                 numeroInterior,
@@ -115,6 +118,7 @@ const createTrabajador = async(req, res) => {
             clabe
         },
         datosLaborales: {
+            ID,
             puesto,
             sueldo,
             ingreso
@@ -143,10 +147,13 @@ const createTrabajador = async(req, res) => {
 
 const editTrabajador = async(req, res) => {
 
-    const {idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc,
+    const {ID, idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
            calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
            banco, cuenta, clabe,
            puesto, sueldo, ingreso} = req.body;
+    console.log('ingreso',ingreso)
+    const ingresoMoment = moment(ingreso).format('YYYY-MM-DD')
+    console.log('ingresoMoment',ingresoMoment)
 
     const { user:idUsuario, cliente:idCliente } = req;
 
@@ -163,6 +170,8 @@ const editTrabajador = async(req, res) => {
             nss,
             curp,
             rfc,
+            estadoCivil,
+            sexo,
             direccion: {
                 calle,
                 numeroInterior,
@@ -179,13 +188,16 @@ const editTrabajador = async(req, res) => {
             clabe
         },
         datosLaborales: {
+            ID,
             puesto,
             sueldo,
-            ingreso
+            ingreso: ingresoMoment
         }
     }
 
     const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+
+    console.log('trabajador',trabajador)
 
     res.status(200).json({
         msg: 'Success' ,

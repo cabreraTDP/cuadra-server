@@ -22,6 +22,8 @@ const TrabajadorSchema = new mongoose.Schema({
         nss: String,
         curp: String,
         rfc: String,
+        estadoCivil: String,
+        sexo: String,
         direccion: {
             calle: String,
             numeroInterior: String,
@@ -38,6 +40,7 @@ const TrabajadorSchema = new mongoose.Schema({
         clabe: String
     },
     datosLaborales: {
+        ID: String,
         puesto: String,
         sueldo: String,
         ingreso: Date
