@@ -50,7 +50,7 @@ const uploadFile = async(req, res) => {
     const {title, idTrabajador} = req.body;
 
     //buscar trabajador por id
-    const search = { name: idTrabajador };
+    const search = { _id: idTrabajador };
 
     //set documentos 
     const documento = {
