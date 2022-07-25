@@ -34,7 +34,7 @@ const createNomina = async(req, res) => {
 
     detalle['semana'] = semananomina;
 
-    const {esquema} = detalle
+    detalle.esquema ? esquema = detalle.esquema : esquema = 'Semana'
 
     const diasTotales = diasNaturales[esquema];
 
