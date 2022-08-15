@@ -39,7 +39,7 @@ const createNomina = async(req, res) => {
     const diasTotales = diasNaturales[esquema];
 
     const registros = operaciones.map((operacion) => {
-        let dias = diasLaborados(diasTotales,operacion.dias);
+        let dias = diasLaborados(diasTotales,operacion.Faltas);
         let isr = calcularISR(operacion.sueldoBase*dias,esquema);
         let sueldoBruto = operacion.sueldoBase*dias;
         let extras = [];
@@ -50,13 +50,13 @@ const createNomina = async(req, res) => {
             trabajador: operacion.trabajador,
             sueldoBase: operacion.sueldoBase,
             dias: dias,
-            faltas: operacion.dias,
-            complementos: operacion.complementos,
-            rebajes: operacion.rebajes,
+            faltas: operacion.Faltas,
+            complementos: operacion.Complementos,
+            rebajes: operacion.Rebajes,
             isr: isr,
             sueldoBruto: sueldoBruto,
             extras,
-            totalPagar: sueldoBruto+operacion.complementos-operacion.rebajes-isr //ISR
+            totalPagar: sueldoBruto+operacion.Complementos-operacion.Rebajes-isr //ISR
         })
     });
 
