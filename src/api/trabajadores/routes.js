@@ -11,6 +11,7 @@ const { prueba,
     altaTrabajador,
     uploadFile, 
     downloadFile,
+    deleteFile,
     subirFotoPerfil, 
     crearContrato } = require('./trabajadores')
 const { uploading } = require('../../utils/s3');
@@ -22,6 +23,7 @@ router.post('/ejemplo',prueba);
 
 router.post('/uploadFile', uploading.single('file'),uploadFile);
 router.get('/downloadFile/:URI', downloadFile);
+router.post('/deleteFile/', deleteFile);
 
 
 router.get('/', authenticate, getTrabajadores);

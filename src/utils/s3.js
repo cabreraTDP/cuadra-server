@@ -36,6 +36,15 @@ const uploading = multer({
 
     return s3.getObject(downloadParams).createReadStream();
   }
+
+  const deleteFileS3 = (fileKey) => {
+    const params = {  Bucket: bucketName, Key: fileKey };
+    s3.deleteObject(params, function(err, data) {
+      if (err) console.log(err, err.stack);  // error
+      else     console.log(data);                 // deleted
+    });
+  }
+
   const download2 = async(fileKey) => {
     const downloadParams = {
       Key: fileKey,
@@ -47,4 +56,4 @@ const uploading = multer({
   }
 
 
-  module.exports = {uploading, download}
+  module.exports = {uploading, download, deleteFileS3}

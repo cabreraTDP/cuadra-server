@@ -1,5 +1,5 @@
 const Trabajador = require('../../models/Trabajador');
-const {download } = require('../../utils/s3');
+const {download, deleteFileS3 } = require('../../utils/s3');
 const {template} = require('./contrato');
 const pdf = require('html-pdf');
 const hbs = require('hbs');
@@ -65,6 +65,24 @@ const uploadFile = async(req, res) => {
 
     res.status(200).json({
         documento
+    })
+};
+
+const deleteFile = async(req, res) => {
+
+    const {uri, idTrabajador} = req.body;
+
+    //buscar trabajador por id
+    const search = { _id: idTrabajador };
+
+    const update = { $pull: { documentos: { URI: uri  } }};
+
+    const trabajador = await Trabajador.findOneAndUpdate(search, update);
+    
+    deleteFileS3(uri);
+
+    res.status(200).json({
+        trabajador
     })
 };
 
@@ -358,5 +376,6 @@ module.exports = {
     subirFotoPerfil,
     uploadFile,
     downloadFile,
+    deleteFile,
     crearContrato
 }
