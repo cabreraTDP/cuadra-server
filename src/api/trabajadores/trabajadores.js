@@ -5,6 +5,7 @@ const pdf = require('html-pdf');
 const hbs = require('hbs');
 const Movimiento = require('../../models/Movimiento');
 const moment = require('moment');
+const Cliente = require('../../models/Cliente');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -299,10 +300,15 @@ const getBajas = async(req, res) => {
 
 const getTrabajador = async(req, res) => {
     const { idTrabajador} = req.body;
+    const idCliente = req.cliente;
+
     const trabajador = await Trabajador.findOne({_id:idTrabajador});
+    const cliente = await Cliente.findOne({_id:idCliente});
+
+
 
     res.status(200).json({
-        data: trabajador
+        data: {trabajador,cliente}
     });
 };
 
