@@ -1,6 +1,6 @@
 const Trabajador = require('../../models/Trabajador');
-const {download, deleteFileS3 } = require('../../utils/s3');
-const {template} = require('./contrato');
+const { download, deleteFileS3 } = require('../../utils/s3');
+const { template } = require('./contrato');
 const pdf = require('html-pdf');
 const hbs = require('hbs');
 const Movimiento = require('../../models/Movimiento');
@@ -26,11 +26,11 @@ const prueba = (req, res) => {
     })
 };
 
-const subirFotoPerfil = async(req, res) => {
+const subirFotoPerfil = async (req, res) => {
 
     const file = req.file;
-    const { idTrabajador} = req.body;
-    console.log('req',idTrabajador)
+    const { idTrabajador } = req.body;
+    console.log('req', idTrabajador)
 
     //buscar trabajador por id
     const search = { _id: idTrabajador };
@@ -45,11 +45,11 @@ const subirFotoPerfil = async(req, res) => {
     })
 };
 
-const uploadFile = async(req, res) => {
+const uploadFile = async (req, res) => {
     console.log('Uploading');
 
     const file = req.file;
-    const {title, idTrabajador} = req.body;
+    const { title, idTrabajador } = req.body;
 
     //buscar trabajador por id
     const search = { _id: idTrabajador };
@@ -60,7 +60,7 @@ const uploadFile = async(req, res) => {
         URI: file.key,
     };
 
-    const update = { $push: { documentos: documento  } };
+    const update = { $push: { documentos: documento } };
 
     await Trabajador.findOneAndUpdate(search, update);
 
@@ -69,17 +69,17 @@ const uploadFile = async(req, res) => {
     })
 };
 
-const deleteFile = async(req, res) => {
+const deleteFile = async (req, res) => {
 
-    const {uri, idTrabajador} = req.body;
+    const { uri, idTrabajador } = req.body;
 
     //buscar trabajador por id
     const search = { _id: idTrabajador };
 
-    const update = { $pull: { documentos: { URI: uri  } }};
+    const update = { $pull: { documentos: { URI: uri } } };
 
     const trabajador = await Trabajador.findOneAndUpdate(search, update);
-    
+
     deleteFileS3(uri);
 
     res.status(200).json({
@@ -87,8 +87,8 @@ const deleteFile = async(req, res) => {
     })
 };
 
-const downloadFile = async(req, res) => {
-    const {URI} = req.params;
+const downloadFile = async (req, res) => {
+    const { URI } = req.params;
     const document = await download(URI);
 
     //console.log(document.Body)
@@ -97,14 +97,14 @@ const downloadFile = async(req, res) => {
     //res.redirect(document)
 };
 
-const createTrabajador = async(req, res) => {
+const createTrabajador = async (req, res) => {
 
-    const {ID, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
-           calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
-           banco, cuenta, clabe,
-           puesto, sueldo, ingreso} = req.body;
+    const { ID, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
+        calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
+        banco, cuenta, clabe,
+        puesto, sueldo, ingreso, fecha_nacimiento } = req.body;
 
-    const { user:idUsuario, cliente:idCliente } = req;
+    const { user: idUsuario, cliente: idCliente } = req;
 
 
     const newTrabajador = new Trabajador({
@@ -121,6 +121,7 @@ const createTrabajador = async(req, res) => {
             rfc,
             estadoCivil,
             sexo,
+            fecha_nacimiento,
             direccion: {
                 calle,
                 numeroInterior,
@@ -160,21 +161,22 @@ const createTrabajador = async(req, res) => {
     await newMovimiento.save();
 
     res.status(200).json({
-        trabajador 
+        trabajador
     });
 }
 
-const editTrabajador = async(req, res) => {
+const editTrabajador = async (req, res) => {
 
-    const {ID, idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
-           calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
-           banco, cuenta, clabe,
-           puesto, sueldo, ingreso} = req.body;
-    console.log('ingreso',ingreso)
+    const { ID, idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
+        calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
+        banco, cuenta, clabe,
+        puesto, sueldo, ingreso, fecha_nacimiento } = req.body;
+    console.log("********dffd***", fecha_nacimiento)
+    console.log('ingreso', ingreso)
     const ingresoMoment = moment(ingreso).format('YYYY-MM-DD')
-    console.log('ingresoMoment',ingresoMoment)
+    console.log('ingresoMoment', ingresoMoment)
 
-    const { user:idUsuario, cliente:idCliente } = req;
+    const { user: idUsuario, cliente: idCliente } = req;
 
     const search = { _id: idTrabajador };
     const update = {
@@ -191,6 +193,7 @@ const editTrabajador = async(req, res) => {
             rfc,
             estadoCivil,
             sexo,
+            fecha_nacimiento,
             direccion: {
                 calle,
                 numeroInterior,
@@ -214,24 +217,24 @@ const editTrabajador = async(req, res) => {
         }
     }
 
-    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, { new: true });
 
-    console.log('trabajador',trabajador)
+    console.log('trabajador', trabajador)
 
     res.status(200).json({
-        msg: 'Success' ,
+        msg: 'Success',
         trabajador
     });
 }
 
-const deleteTrabajador = async(req,res) => {
-    const { cliente:idCliente,  user:idUsuario, } = req;
-    const { idTrabajador, fechaMovimiento} = req.body;
+const deleteTrabajador = async (req, res) => {
+    const { cliente: idCliente, user: idUsuario, } = req;
+    const { idTrabajador, fechaMovimiento } = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: false };
 
-    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, { new: true });
 
     const newMovimiento = new Movimiento({
         identificacion: {
@@ -246,19 +249,19 @@ const deleteTrabajador = async(req,res) => {
     await newMovimiento.save();
 
     res.status(200).json({
-        msg: 'Success' ,
+        msg: 'Success',
         trabajador
     });
 };
 
-const altaTrabajador = async(req,res) => {
-    const { cliente:idCliente } = req;
-    const { idTrabajador, fechaMovimiento} = req.body;
+const altaTrabajador = async (req, res) => {
+    const { cliente: idCliente } = req;
+    const { idTrabajador, fechaMovimiento } = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: true };
 
-    const trabajador = await Trabajador.findOneAndUpdate(search, update, {new: true});
+    const trabajador = await Trabajador.findOneAndUpdate(search, update, { new: true });
 
     const newMovimiento = new Movimiento({
         identificacion: {
@@ -273,64 +276,63 @@ const altaTrabajador = async(req,res) => {
     await newMovimiento.save();
 
     res.status(200).json({
-        msg: 'Success' ,
+        msg: 'Success',
         trabajador
     });
 };
 
-const getTrabajadores = async(req, res) => {
-    const { cliente:idCliente } = req;
+const getTrabajadores = async (req, res) => {
+    const { cliente: idCliente } = req;
 
-    const trabajadores = await Trabajador.find({cliente:idCliente, activo:true});
+    const trabajadores = await Trabajador.find({ cliente: idCliente, activo: true });
 
     res.status(200).json({
-        data: trabajadores 
+        data: trabajadores
     });
 };
 
-const getBajas = async(req, res) => {
-    const { cliente:idCliente } = req;
+const getBajas = async (req, res) => {
+    const { cliente: idCliente } = req;
 
-    const trabajadores = await Trabajador.find({cliente:idCliente, activo:false});
+    const trabajadores = await Trabajador.find({ cliente: idCliente, activo: false });
 
     res.status(200).json({
-        data: trabajadores 
+        data: trabajadores
     });
 };
 
-const getTrabajador = async(req, res) => {
-    const { idTrabajador} = req.body;
+const getTrabajador = async (req, res) => {
+    const { idTrabajador } = req.body;
     const idCliente = req.cliente;
 
-    const trabajador = await Trabajador.findOne({_id:idTrabajador});
-    const cliente = await Cliente.findOne({_id:idCliente});
-
-
+    const trabajador = await Trabajador.findOne({ _id: idTrabajador });
+    const cliente = await Cliente.findOne({ _id: idCliente });
+    console.log(trabajador.datosPersonales)
 
     res.status(200).json({
-        data: {trabajador,cliente}
+        data: { trabajador, cliente }
     });
 };
 
-const crearContrato = async(req, res) => {
+const crearContrato = async (req, res) => {
     const {
-            patron,
-            representante_legal,
-            nombre_empleado,
-            rfc_representante,
-            direccion_representante,
-            principal_actividad,
-            sexo,
-            fecha_nacimiento,
-            nss,
-            rfc,
-            curp,
-            direccion_empleado,
-            salario_texto,
-            esquema_pago,
-            fecha_contrato
+        patron,
+        representante_legal,
+        nombre_empleado,
+        rfc_representante,
+        direccion_representante,
+        principal_actividad,
+        sexo,
+        fecha_nacimiento,
+        nss,
+        rfc,
+        curp,
+        direccion_empleado,
+        salario_texto,
+        esquema_pago,
+        fecha_contrato
     } = req.body;
-    
+
     const data = {
         patron,
         representante_legal,
@@ -354,14 +356,14 @@ const crearContrato = async(req, res) => {
     const config = {
         "format": "A4",
         "border": {
-            "top": "1.27cm",            
+            "top": "1.27cm",
             "right": "1.27cm",
             "bottom": "1.27cm",
             "left": "1.27cm"
-          },
+        },
     }
-    
-    pdf.create(html, config).toBuffer(function(err, buffer){
+
+    pdf.create(html, config).toBuffer(function (err, buffer) {
         res.status(200).json({
             data: buffer
         });

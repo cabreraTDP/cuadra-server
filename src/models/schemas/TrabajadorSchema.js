@@ -24,6 +24,7 @@ const TrabajadorSchema = new mongoose.Schema({
         rfc: String,
         estadoCivil: String,
         sexo: String,
+        fecha_nacimiento: Date,
         direccion: {
             calle: String,
             numeroInterior: String,
