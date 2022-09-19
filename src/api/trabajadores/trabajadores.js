@@ -354,7 +354,7 @@ const crearContrato = async (req, res) => {
     const html = await hbs.compile(template)(data);
 
     const config = {
-        "format": "A4",
+        "format": "Legal",
         "border": {
             "top": "1.27cm",
             "right": "1.27cm",
