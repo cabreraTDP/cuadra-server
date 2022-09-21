@@ -121,7 +121,7 @@ const eliminarOperacion = async(req,res) => {
 const getOperaciones = async(req,res) => {
     const { cliente:idCliente } = req;
 
-    const operaciones = await Operacion.find({cliente:idCliente});
+    const operaciones = await Operacion.find({"identificacion.cliente":idCliente});
 
     res.status(200).json({
         data: operaciones

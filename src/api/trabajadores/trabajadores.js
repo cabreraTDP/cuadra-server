@@ -284,7 +284,7 @@ const altaTrabajador = async (req, res) => {
 const getTrabajadores = async (req, res) => {
     const { cliente: idCliente } = req;
 
-    const trabajadores = await Trabajador.find({ cliente: idCliente, activo: true });
+    const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, activo: true });
 
     res.status(200).json({
         data: trabajadores
@@ -294,7 +294,7 @@ const getTrabajadores = async (req, res) => {
 const getBajas = async (req, res) => {
     const { cliente: idCliente } = req;
 
-    const trabajadores = await Trabajador.find({ cliente: idCliente, activo: false });
+    const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, activo: false });
 
     res.status(200).json({
         data: trabajadores

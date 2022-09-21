@@ -99,7 +99,7 @@ const getNominabyCliente = async(req, res) => {
 
     const { user:idUsuario, cliente:idCliente } = req;
 
-    const nominas = await Nomina.find({cliente: idCliente})
+    const nominas = await Nomina.find({"identificacion.cliente": idCliente})
     
 
     res.status(200).json({

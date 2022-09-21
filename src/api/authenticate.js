@@ -8,7 +8,6 @@ module.exports = (req, res, next) => {
         const info = decodeJWT(token);
         req.user = info.id;
         req.cliente = info.cliente;
-
         next();
 
     }else{
