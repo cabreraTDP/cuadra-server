@@ -28,6 +28,64 @@ const getWeek = function (date) {
         return weeknum;
     };
 
+    const subsidioTarifas = [
+        {
+            inf: 0,
+            sup: 1768.96,
+            subsidio: 407.02
+        },
+        {
+            inf: 1768.96,
+            sup: 2653.38,
+            subsidio: 406.83
+        },
+        {
+            inf: 2653.38,
+            sup: 3472.84,
+            subsidio: 406.62
+        },
+        {
+            inf: 3472.84,
+            sup: 3537.87,
+            subsidio: 392.77
+        },
+        {
+            inf: 3537.87,
+            sup: 4446.15,
+            subsidio: 382.46
+        },
+        {
+            inf: 4446.15,
+            sup: 4717.18,
+            subsidio: 354.23
+        },
+        {
+            inf: 4717.18,
+            sup: 5335.42,
+            subsidio: 324.87
+        },
+        {
+            inf: 5335.42,
+            sup: 6224.67,
+            subsidio: 294.63
+        },
+        {
+            inf: 6224.67,
+            sup: 7113.90,
+            subsidio: 253.54
+        },
+        {
+            inf: 7113.90,
+            sup: 7382.33,
+            subsidio: 217.61
+        },
+        {
+            inf: 7382.33,
+            sup: 1000000,
+            subsidio: 0
+        }
+    ];
+
     const ISRTarifas = {
         'Semana':[
             {
@@ -174,10 +232,17 @@ const getWeek = function (date) {
         const tarifa = ISRTarifas[cotizador].find((segmento) => sueldo>segmento.inf && sueldo<segmento.sup);
         const gravable = sueldo-tarifa.inf;
         const isr = Number.parseFloat(tarifa.cuota + (gravable*tarifa.porcentaje/100)).toFixed(2)
-    
+        
         return isr
     };
 
+    const calcularSubsidio = function(sueldo){
+        if(sueldo==0){
+            return 0
+        }
+        const subsidio = subsidioTarifas.find((segmento) => sueldo>segmento.inf && sueldo<segmento.sup);
+        return subsidio
+    }
 
     const sumarArray = (array)=>{
         let initial = 0;
@@ -230,4 +295,4 @@ const getWeek = function (date) {
         return sueldo*0.25*dias
     }
 
-    module.exports={getWeek, calcularISR, sumarArray, PDFtoArray, monthToNumber,primaDominical};
+    module.exports={getWeek, calcularISR, sumarArray, PDFtoArray, monthToNumber,primaDominical, calcularSubsidio};

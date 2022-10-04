@@ -285,7 +285,7 @@ const getTrabajadores = async (req, res) => {
     const { cliente: idCliente } = req;
 
     const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, activo: true });
-
+    console.log(trabajadores)
     res.status(200).json({
         data: trabajadores
     });

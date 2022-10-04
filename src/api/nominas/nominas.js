@@ -1,7 +1,7 @@
 const Nomina = require('../../models/Nomina');
 const Operacion = require('../../models/Operacion');
 const Trabajador = require('../../models/Trabajador');
-const {getWeek, calcularISR, sumarArray} = require('../../utils/extras')
+const {getWeek, calcularISR, sumarArray, calcularSubsidio} = require('../../utils/extras')
 const moment = require('moment')
 const diasNaturales = {
     'Semana': 7,
@@ -43,6 +43,7 @@ const createNomina = async(req, res) => {
         let isr = calcularISR(operacion.sueldoBase*dias,esquema);
         let sueldoBruto = operacion.sueldoBase*dias;
         let extras = [];
+        let subsidio = calcularSubsidio(operacion.sueldoBase*dias)
         if(operacion["Horas Extras"])extras.push({"Horas Extras":operacion["Horas Extras"]*operacion.sueldoBase})
         if(operacion["Domingos Trabajados"])extras.push({"Domingos Trabajados": primaDominical(operacion["Domingos Trabajados"])})
 
@@ -56,7 +57,7 @@ const createNomina = async(req, res) => {
             isr: isr,
             sueldoBruto: sueldoBruto,
             extras,
-            totalPagar: sueldoBruto+operacion.Complementos-operacion.Rebajes-isr //ISR
+            totalPagar: sueldoBruto+operacion.Complementos-operacion.Rebajes-isr+subsidio //ISR
         })
     });
 
