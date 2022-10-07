@@ -241,7 +241,8 @@ const getWeek = function (date) {
             return 0
         }
         const subsidio = subsidioTarifas.find((segmento) => sueldo>segmento.inf && sueldo<segmento.sup);
-        return subsidio['subsidio']
+        const cuota = subsidio['subsidio']
+        return cuota
     }
 
     const sumarArray = (array)=>{
