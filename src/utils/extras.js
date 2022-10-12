@@ -28,63 +28,123 @@ const getWeek = function (date) {
         return weeknum;
     };
 
-    const subsidioTarifas = [
-        {
-            inf: 0,
-            sup: 1768.96,
-            subsidio: 407.02
-        },
-        {
-            inf: 1768.96,
-            sup: 2653.38,
-            subsidio: 406.83
-        },
-        {
-            inf: 2653.38,
-            sup: 3472.84,
-            subsidio: 406.62
-        },
-        {
-            inf: 3472.84,
-            sup: 3537.87,
-            subsidio: 392.77
-        },
-        {
-            inf: 3537.87,
-            sup: 4446.15,
-            subsidio: 382.46
-        },
-        {
-            inf: 4446.15,
-            sup: 4717.18,
-            subsidio: 354.23
-        },
-        {
-            inf: 4717.18,
-            sup: 5335.42,
-            subsidio: 324.87
-        },
-        {
-            inf: 5335.42,
-            sup: 6224.67,
-            subsidio: 294.63
-        },
-        {
-            inf: 6224.67,
-            sup: 7113.90,
-            subsidio: 253.54
-        },
-        {
-            inf: 7113.90,
-            sup: 7382.33,
-            subsidio: 217.61
-        },
-        {
-            inf: 7382.33,
-            sup: 1000000,
-            subsidio: 0
-        }
-    ];
+    const subsidioTarifas = {
+        'Semana': [
+            {
+                inf: 0,
+                sup: 407.33,
+                subsidio: 93.73
+            },
+            {
+                inf: 407.33,
+                sup: 610.96,
+                subsidio: 93.66
+            },
+            {
+                inf: 610.96,
+                sup: 799.68,
+                subsidio: 93.66
+            },
+            {
+                inf: 799.68,
+                sup: 814.66,
+                subsidio: 90.44
+            },
+            {
+                inf: 814.66,
+                sup: 1023.75,
+                subsidio: 88.06
+            },
+            {
+                inf: 1023.75,
+                sup: 1086.19,
+                subsidio: 81.55
+            },
+            {
+                inf: 1086.19,
+                sup: 1228.57,
+                subsidio: 74.83
+            },
+            {
+                inf: 1228.57,
+                sup: 1433.32,
+                subsidio: 67.83
+            },
+            {
+                inf: 1433.32,
+                sup: 1638.07,
+                subsidio: 58.38
+            },
+            {
+                inf: 1638.07,
+                sup: 1699.88,
+                subsidio: 50.12
+            },
+            {
+                inf: 1699.88,
+                sup: 1000000,
+                subsidio: 0
+            }
+        ],
+        'Quincena': [
+            {
+                inf: 0,
+                sup: 872.85,
+                subsidio: 200.85
+            },
+            {
+                inf: 872.85,
+                sup: 1309.20,
+                subsidio: 200.70
+            },
+            {
+                inf: 1309.20,
+                sup: 1713.60,
+                subsidio: 200.70
+            },
+            {
+                inf: 1713.60,
+                sup: 1745.70,
+                subsidio: 193.80
+            },
+            {
+                inf: 1745.70,
+                sup: 2193.75,
+                subsidio: 188.70
+            },
+            {
+                inf: 2193.75,
+                sup: 2327.55,
+                subsidio: 174.75
+            },
+            {
+                inf: 2327.55,
+                sup: 2632.65,
+                subsidio: 160.35
+            },
+            {
+                inf: 2632.65,
+                sup: 3071.40,
+                subsidio: 145.35
+            },
+            {
+                inf: 3071.40,
+                sup: 3510.15,
+                subsidio: 125.10
+            },
+            {
+                inf: 3510.15,
+                sup: 3642.60,
+                subsidio: 107.40
+            },
+            {
+                inf: 3642.60,
+                sup: 1000000,
+                subsidio: 0
+            }
+        ],
+    
+    };
 
     const ISRTarifas = {
         'Semana':[
@@ -240,7 +300,7 @@ const getWeek = function (date) {
         if(sueldo==0){
             return 0
         }
-        const subsidio = subsidioTarifas.find((segmento) => sueldo>segmento.inf && sueldo<segmento.sup);
+        const subsidio = subsidioTarifas[cotizador].find((segmento) => sueldo>segmento.inf && sueldo<segmento.sup);
         const cuota = subsidio['subsidio']
         return cuota
     }
