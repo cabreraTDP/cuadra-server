@@ -43,7 +43,7 @@ const createNomina = async(req, res) => {
         let isr = calcularISR(operacion.sueldoBase*dias,esquema);
         let sueldoBruto = operacion.sueldoBase*dias;
         let extras = [];
-        let subsidio = calcularSubsidio(operacion.sueldoBase*dias)
+        let subsidio = calcularSubsidio(operacion.sueldoBase*dias,esquema)
         if(operacion["Horas Extras"])extras.push({"Horas Extras":operacion["Horas Extras"]*operacion.sueldoBase})
         if(operacion["Domingos Trabajados"])extras.push({"Domingos Trabajados": primaDominical(operacion["Domingos Trabajados"])})
 

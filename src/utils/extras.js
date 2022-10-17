@@ -296,7 +296,7 @@ const getWeek = function (date) {
         return isr
     };
 
-    const calcularSubsidio = function(sueldo){
+    const calcularSubsidio = function(sueldo, cotizador){
         if(sueldo==0){
             return 0
         }
