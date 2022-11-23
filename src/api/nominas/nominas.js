@@ -121,10 +121,47 @@ const getNominaById = async(req, res) => {
     })
 };
 
+const crearFiniquito = async(req, res) => {
+
+    let { sueldoDiario, fechaIngreso, ultimoDiaPago } = req.body;
+
+    fechaIngreso = new Date(fechaIngreso);
+    ultimoDiaPago = new Date(ultimoDiaPago);
+    sueldoDiario = parseInt(sueldoDiario)
+    const hoy = Date.now()
+    const endYear = new Date('12/31/2022')
+    let diasTrabajados = Math.ceil( Math.abs(ultimoDiaPago - fechaIngreso) / (1000 * 60 * 60 * 24)); 
+    if(diasTrabajados>365){
+        diasTrabajados = 365
+    }
+
+    const diasFaltantesPago = Math.ceil( Math.abs(hoy - ultimoDiaPago) / (1000 * 60 * 60 * 24)); 
+    const aguinaldo = ((sueldoDiario*15)/365)*(diasTrabajados)
+    const diasFaltantesYear = Math.ceil( Math.abs(endYear - hoy) / (1000 * 60 * 60 * 24)); 
+    const vacaciones = (6*sueldoDiario/365)*diasTrabajados
+    const primaVacacional = vacaciones*0.25
+
+    const totalPagar = (diasFaltantesPago*sueldoDiario) + aguinaldo + vacaciones + primaVacacional
+
+    const resultado = {
+        "pendiente": (diasFaltantesPago*sueldoDiario).toFixed(2),
+        "aguinaldo": aguinaldo.toFixed(2),
+        "vacaciones": vacaciones.toFixed(2),
+        "primaVacacional": primaVacacional.toFixed(2),
+        "total": totalPagar.toFixed(2)
+    }
+
+
+    res.status(200).json({
+        resultado
+    })
+}
+
 
 module.exports = {
     prueba,
     createNomina,
     getNominabyCliente,
-    getNominaById
+    getNominaById,
+    crearFiniquito
 }
