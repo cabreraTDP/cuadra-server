@@ -123,8 +123,8 @@ const getNominaById = async(req, res) => {
 
 const crearFiniquito = async(req, res) => {
 
-    let { sueldoDiario, fechaIngreso, ultimoDiaPago } = req.body;
-
+    let { sueldoDiario, fechaIngreso, ultimoDiaPago, otros } = req.body;
+    otros = parseInt(otros)
     fechaIngreso = new Date(fechaIngreso);
     ultimoDiaPago = new Date(ultimoDiaPago);
     sueldoDiario = parseInt(sueldoDiario)
@@ -141,13 +141,14 @@ const crearFiniquito = async(req, res) => {
     const vacaciones = (6*sueldoDiario/365)*diasTrabajados
     const primaVacacional = vacaciones*0.25
 
-    const totalPagar = (diasFaltantesPago*sueldoDiario) + aguinaldo + vacaciones + primaVacacional
+    const totalPagar = (diasFaltantesPago*sueldoDiario) + aguinaldo + vacaciones + primaVacacional + otros
 
     const resultado = {
         "pendiente": (diasFaltantesPago*sueldoDiario).toFixed(2),
         "aguinaldo": aguinaldo.toFixed(2),
         "vacaciones": vacaciones.toFixed(2),
         "primaVacacional": primaVacacional.toFixed(2),
+        "otros": otros.toFixed(2),
         "total": totalPagar.toFixed(2)
     }
 
