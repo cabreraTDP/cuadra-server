@@ -17,9 +17,8 @@ const NominaSchema = new mongoose.Schema({
     },
     detalle: {
         periodoInicio: Date,
-        priodoFin: Date,
+        periodoFin: Date,
         semana: Number,
-        creada: Date,
         total: Number
     },
     registros: [
@@ -36,6 +35,10 @@ const NominaSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+            faltas: {
+                type: Number,
+                required: true
+            },
             isr: {
                 type: Number,
                 required: true
@@ -47,6 +50,10 @@ const NominaSchema = new mongoose.Schema({
             rebajes: {
                 type: Number,
                 default: 0
+            },
+            sueldoBruto:{
+                type: Number,
+                required: true
             },
             totalPagar: {
                 type: Number,

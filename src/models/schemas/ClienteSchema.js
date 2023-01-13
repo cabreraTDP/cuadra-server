@@ -5,6 +5,18 @@ const ClienteSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    representante_legal: {
+        type: String,
+        required: true
+    },
+    direccion_representante: {
+        type: String,
+        required: true
+    },
+    rfc_representante: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         required: true,

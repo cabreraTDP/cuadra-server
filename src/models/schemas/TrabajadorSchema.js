@@ -21,6 +21,10 @@ const TrabajadorSchema = new mongoose.Schema({
         apellidoPaterno: String,
         nss: String,
         curp: String,
+        rfc: String,
+        estadoCivil: String,
+        sexo: String,
+        fecha_nacimiento: Date,
         direccion: {
             calle: String,
             numeroInterior: String,
@@ -37,10 +41,29 @@ const TrabajadorSchema = new mongoose.Schema({
         clabe: String
     },
     datosLaborales: {
+        ID: String,
         puesto: String,
         sueldo: String,
         ingreso: Date
+    },
+    documentos: [
+        {
+            titulo: String,
+            URI: String,
+            createdAt: {
+                type: Date,
+                default: Date.now()
+            }
+        }
+    ],
+    activo: {
+        type: Boolean,
+        required: true
+    },
+    foto: {
+        type: String
     }
+
 })
 
 module.exports = TrabajadorSchema;

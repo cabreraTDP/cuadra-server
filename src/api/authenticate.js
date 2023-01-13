@@ -6,7 +6,8 @@ module.exports = (req, res, next) => {
 
     if(token){
         const info = decodeJWT(token);
-        req.userId = info.id;
+        req.user = info.id;
+        req.cliente = info.cliente;
         next();
 
     }else{

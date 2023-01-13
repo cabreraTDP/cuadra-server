@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { prueba } = require('./nominas')
+const authenticate = require('../authenticate');
+const { prueba, createNomina, getNominabyCliente, getNominaById, crearFiniquito } = require('./nominas')
 
-// @route   POST api/prueba
-// @desc    Probar la api
-// @access  Private
+router.get('/', authenticate, getNominabyCliente);
+router.post('/getById', authenticate, getNominaById);
 
-router.get('/', prueba);
+
+router.post('/add', authenticate, createNomina);
+router.post('/finiquito', authenticate, crearFiniquito);
+
+
 
 module.exports = router;
