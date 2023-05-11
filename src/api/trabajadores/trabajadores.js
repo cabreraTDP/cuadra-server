@@ -6,6 +6,7 @@ const hbs = require('hbs');
 const Movimiento = require('../../models/Movimiento');
 const moment = require('moment');
 const Cliente = require('../../models/Cliente');
+const Empresa = require('../../models/Empresa');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -102,7 +103,7 @@ const createTrabajador = async (req, res) => {
     const { ID, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
         calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
         banco, cuenta, clabe,
-        puesto, sueldo, ingreso, fecha_nacimiento } = req.body;
+        puesto, sueldo, ingreso, fecha_nacimiento, empresa: idEmpresa } = req.body;
 
     const { user: idUsuario, cliente: idCliente } = req;
 
@@ -110,6 +111,7 @@ const createTrabajador = async (req, res) => {
     const newTrabajador = new Trabajador({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         datosPersonales: {
@@ -151,6 +153,7 @@ const createTrabajador = async (req, res) => {
     const newMovimiento = new Movimiento({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         trabajador: trabajador._id,
@@ -170,7 +173,7 @@ const editTrabajador = async (req, res) => {
     const { ID, idTrabajador, nombre, apellidoMaterno, apellidoPaterno, nss, curp, rfc, estadoCivil, sexo,
         calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
         banco, cuenta, clabe,
-        puesto, sueldo, ingreso, fecha_nacimiento } = req.body;
+        puesto, sueldo, ingreso, fecha_nacimiento, empresa: idEmpresa } = req.body;
     console.log("********dffd***", fecha_nacimiento)
     console.log('ingreso', ingreso)
     const ingresoMoment = moment(ingreso).format('YYYY-MM-DD')
@@ -182,6 +185,7 @@ const editTrabajador = async (req, res) => {
     const update = {
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         datosPersonales: {
@@ -229,7 +233,7 @@ const editTrabajador = async (req, res) => {
 
 const deleteTrabajador = async (req, res) => {
     const { cliente: idCliente, user: idUsuario, } = req;
-    const { idTrabajador, fechaMovimiento } = req.body;
+    const { idTrabajador, fechaMovimiento, empresa: idEmpresa } = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: false };
@@ -239,6 +243,7 @@ const deleteTrabajador = async (req, res) => {
     const newMovimiento = new Movimiento({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         trabajador: idTrabajador,
@@ -256,7 +261,7 @@ const deleteTrabajador = async (req, res) => {
 
 const altaTrabajador = async (req, res) => {
     const { cliente: idCliente } = req;
-    const { idTrabajador, fechaMovimiento } = req.body;
+    const { idTrabajador, fechaMovimiento, empresa: idEmpresa } = req.body;
 
     const search = { _id: idTrabajador };
     const update = { activo: true };
@@ -266,6 +271,7 @@ const altaTrabajador = async (req, res) => {
     const newMovimiento = new Movimiento({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         trabajador: idTrabajador,
@@ -291,6 +297,16 @@ const getTrabajadores = async (req, res) => {
     });
 };
 
+const getTrabajadoresByEmpresa = async (req, res) => {
+    const { cliente: idCliente } = req;
+    const { empresa: idEmpresa } = req.body;
+    const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, "identificacion.empresa": idEmpresa, activo: true });
+    console.log(trabajadores)
+    res.status(200).json({
+        data: trabajadores
+    });
+};
+
 const getBajas = async (req, res) => {
     const { cliente: idCliente } = req;
 
@@ -302,15 +318,15 @@ const getBajas = async (req, res) => {
 };
 
 const getTrabajador = async (req, res) => {
-    const { idTrabajador } = req.body;
+    const { idTrabajador, empresa: idEmpresa } = req.body;
     const idCliente = req.cliente;
 
     const trabajador = await Trabajador.findOne({ _id: idTrabajador });
-    const cliente = await Cliente.findOne({ _id: idCliente });
+    const empresa = await Empresa.findOne({ _id: idEmpresa });
     console.log(trabajador.datosPersonales)
 
     res.status(200).json({
-        data: { trabajador, cliente }
+        data: { trabajador, empresa }
     });
 };
 
@@ -379,6 +395,7 @@ module.exports = {
     getTrabajadores,
     getBajas,
     getTrabajador,
+    getTrabajadoresByEmpresa,
     deleteTrabajador,
     altaTrabajador,
     subirFotoPerfil,

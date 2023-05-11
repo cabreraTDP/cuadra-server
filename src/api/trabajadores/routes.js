@@ -7,6 +7,7 @@ const { prueba,
     getTrabajadores, 
     getBajas,
     getTrabajador, 
+    getTrabajadoresByEmpresa,
     deleteTrabajador,
     altaTrabajador,
     uploadFile, 
@@ -27,6 +28,7 @@ router.post('/deleteFile/', deleteFile);
 
 
 router.get('/', authenticate, getTrabajadores);
+router.get('/getTrabajadoresByEmpresa', authenticate, getTrabajadoresByEmpresa);
 router.get('/bajas', authenticate, getBajas);
 router.post('/add',  authenticate, createTrabajador);
 router.post('/edit', authenticate, editTrabajador);
