@@ -62,13 +62,14 @@ const prueba = (req, res) => {
 };
 
 const crearOperacion = async(req,res) => {
-    const { user:idUsuario, cliente:idCliente } = req;
+    const { user:idUsuario, cliente:idCliente, empresa: idEmpresa } = req;
 
     const {titulo, descripcion, monto, tipo, categoria, fechaOperacion} = req.body;
 
     const newOperacion = new Operacion({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         tipo,
@@ -128,6 +129,16 @@ const getOperaciones = async(req,res) => {
     });
 };
 
+const getOperacionesByEmpresa = async(req,res) => {
+    const { cliente:idCliente,  empresa: idEmpresa } = req;
+
+    const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.emrpesa":idEmpresa, });
+
+    res.status(200).json({
+        data: operaciones
+    });
+};
+
 const uploadPDF = async(req,res) => {
     const { user:idUsuario, cliente:idCliente } = req;
     const {tipo} = req.body;
@@ -154,5 +165,6 @@ module.exports = {
     crearOperacion,
     editarOperacion,
     eliminarOperacion,
-    getOperaciones
+    getOperaciones,
+    getOperacionesByEmpresa
 }
