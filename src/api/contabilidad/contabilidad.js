@@ -62,9 +62,9 @@ const prueba = (req, res) => {
 };
 
 const crearOperacion = async(req,res) => {
-    const { user:idUsuario, cliente:idCliente, empresa: idEmpresa } = req;
+    const { user:idUsuario, cliente:idCliente} = req;
 
-    const {titulo, descripcion, monto, tipo, categoria, fechaOperacion} = req.body;
+    const {titulo, descripcion, monto, tipo, categoria, fechaOperacion, empresa: idEmpresa } = req.body;
 
     const newOperacion = new Operacion({
         identificacion: {
@@ -130,8 +130,8 @@ const getOperaciones = async(req,res) => {
 };
 
 const getOperacionesByEmpresa = async(req,res) => {
-    const { cliente:idCliente,  empresa: idEmpresa } = req;
-
+    const { cliente:idCliente} = req;
+    const {empresa: idEmpresa } = req.body;
     const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.emrpesa":idEmpresa, });
 
     res.status(200).json({
