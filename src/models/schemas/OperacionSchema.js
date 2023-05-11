@@ -6,6 +6,10 @@ const OperacionSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'cliente'
         },
+        empresa: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'empresa'
+        },
         usuario: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'user'
