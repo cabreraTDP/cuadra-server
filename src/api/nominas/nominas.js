@@ -22,7 +22,8 @@ const createNomina = async(req, res) => {
 
     const {
         detalle,
-        operaciones
+        operaciones,
+        empresa: idEmpresa 
     } = req.body;
 
     const { user:idUsuario, cliente:idCliente } = req;
@@ -68,6 +69,7 @@ const createNomina = async(req, res) => {
     const newNomina = new Nomina({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         detalle,
@@ -79,6 +81,7 @@ const createNomina = async(req, res) => {
     const newOperacion = new Operacion({
         identificacion: {
             cliente: idCliente,
+            empresa: idEmpresa,
             usuario: idUsuario
         },
         tipo:'Gasto',
@@ -101,6 +104,19 @@ const getNominabyCliente = async(req, res) => {
     const { user:idUsuario, cliente:idCliente } = req;
 
     const nominas = await Nomina.find({"identificacion.cliente": idCliente})
+    
+
+    res.status(200).json({
+        data: nominas
+    })
+};
+
+const getNominabyEmpresa = async(req, res) => {
+
+    const { user:idUsuario, cliente:idCliente } = req;
+    const { empresa: idEmpresa } = req.body;
+
+    const nominas = await Nomina.find({"identificacion.cliente": idCliente, "identificacion.empresa": idEmpresa})
     
 
     res.status(200).json({
@@ -164,5 +180,6 @@ module.exports = {
     createNomina,
     getNominabyCliente,
     getNominaById,
-    crearFiniquito
+    crearFiniquito,
+    getNominabyEmpresa
 }
