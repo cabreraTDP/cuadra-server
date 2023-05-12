@@ -6,7 +6,7 @@ const multer = require('multer');
 const upload = multer();
 
 router.get('/operaciones', authenticate, getOperaciones);
-router.get('/operacionesEmpresa', authenticate, getOperacionesByEmpresa);
+router.post('/operacionesEmpresa', authenticate, getOperacionesByEmpresa);
 router.post('/sat',upload.fields([{name: 'file', maxCount: 1}]), authenticate, uploadPDF);
 router.post('/crear', authenticate, crearOperacion);
 router.post('/editar', authenticate, editarOperacion);

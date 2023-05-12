@@ -174,10 +174,8 @@ const editTrabajador = async (req, res) => {
         calle, numeroExterior, numeroInterior, colonia, codigoPostal, municipio, estado,
         banco, cuenta, clabe,
         puesto, sueldo, ingreso, fecha_nacimiento, empresa: idEmpresa } = req.body;
-    console.log("********dffd***", fecha_nacimiento)
-    console.log('ingreso', ingreso)
+
     const ingresoMoment = moment(ingreso).format('YYYY-MM-DD')
-    console.log('ingresoMoment', ingresoMoment)
 
     const { user: idUsuario, cliente: idCliente } = req;
 
@@ -291,7 +289,6 @@ const getTrabajadores = async (req, res) => {
     const { cliente: idCliente } = req;
 
     const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, activo: true });
-    console.log(trabajadores)
     res.status(200).json({
         data: trabajadores
     });
@@ -301,7 +298,6 @@ const getTrabajadoresByEmpresa = async (req, res) => {
     const { cliente: idCliente } = req;
     const { empresa: idEmpresa } = req.body;
     const trabajadores = await Trabajador.find({ "identificacion.cliente": idCliente, "identificacion.empresa": idEmpresa, activo: true });
-    console.log(trabajadores)
     res.status(200).json({
         data: trabajadores
     });

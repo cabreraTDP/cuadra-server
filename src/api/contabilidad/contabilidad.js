@@ -64,8 +64,7 @@ const prueba = (req, res) => {
 const crearOperacion = async(req,res) => {
     const { user:idUsuario, cliente:idCliente} = req;
 
-    const {titulo, descripcion, monto, tipo, categoria, fechaOperacion, empresa: idEmpresa } = req.body;
-
+    const {titulo, descripcion, monto, tipo, categoria, fechaOperacion, idEmpresa } = req.body;
     const newOperacion = new Operacion({
         identificacion: {
             cliente: idCliente,
@@ -121,7 +120,6 @@ const eliminarOperacion = async(req,res) => {
 
 const getOperaciones = async(req,res) => {
     const { cliente:idCliente } = req;
-
     const operaciones = await Operacion.find({"identificacion.cliente":idCliente});
 
     res.status(200).json({
@@ -131,9 +129,9 @@ const getOperaciones = async(req,res) => {
 
 const getOperacionesByEmpresa = async(req,res) => {
     const { cliente:idCliente} = req;
-    const {empresa: idEmpresa } = req.body;
-    const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.emrpesa":idEmpresa, });
+    const idEmpresa  = req.body.empresa;
 
+    const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.empresa":idEmpresa });
     res.status(200).json({
         data: operaciones
     });
@@ -149,7 +147,7 @@ const uploadPDF = async(req,res) => {
     const texto = await PDFtoArray(file);
 
     const operaciones = constante[tipo]
-    console.log(tipo)
+    
     const operaciones_resultado = operaciones(texto,idCliente,idUsuario);
 
     const guardado = await Operacion.insertMany(operaciones_resultado);

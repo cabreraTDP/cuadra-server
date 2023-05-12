@@ -28,7 +28,7 @@ router.post('/deleteFile/', deleteFile);
 
 
 router.get('/', authenticate, getTrabajadores);
-router.get('/getTrabajadoresByEmpresa', authenticate, getTrabajadoresByEmpresa);
+router.post('/getTrabajadoresByEmpresa', authenticate, getTrabajadoresByEmpresa);
 router.get('/bajas', authenticate, getBajas);
 router.post('/add',  authenticate, createTrabajador);
 router.post('/edit', authenticate, editTrabajador);

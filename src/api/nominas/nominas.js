@@ -114,11 +114,10 @@ const getNominabyCliente = async(req, res) => {
 const getNominabyEmpresa = async(req, res) => {
 
     const { user:idUsuario, cliente:idCliente } = req;
-    const { empresa: idEmpresa } = req.body;
+    const idEmpresa  = req.body.empresa;
 
     const nominas = await Nomina.find({"identificacion.cliente": idCliente, "identificacion.empresa": idEmpresa})
     
-
     res.status(200).json({
         data: nominas
     })
