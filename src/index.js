@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors');
 
 const corsOptions = {
-    origin: ['http://localhost:3000','https://distracted-goldberg-f360b4.netlify.app','https://objective-bohr-8da893.netlify.app','https://app.cuadrat.com.mx'],
+    origin: ['http://localhost:3000','https://distracted-goldberg-f360b4.netlify.app','https://objective-bohr-8da893.netlify.app','https://app.cuadrat.com.mx','http://localhost:3000/'],
     credentials: true,
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }

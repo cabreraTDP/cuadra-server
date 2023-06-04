@@ -117,7 +117,7 @@ const checkUser = (req, res) => {
 
 const getEmpresa = async(req, res) => {
     const { user: idUsuario, cliente: idCliente } = req;
-    const cliente = await Cliente.find({ "_id": idCliente});
+    const cliente = await Cliente.find({ "_id": idCliente}).populate('empresas.empresa');
     res.status(200).json({
         data: cliente
     });
