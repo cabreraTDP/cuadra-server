@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const EmpresaSchema = new mongoose.Schema({
+    identificacion: {
+        cliente: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'cliente'
+    }},
     empresa: {
         type: String,
         required: true

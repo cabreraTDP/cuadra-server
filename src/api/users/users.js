@@ -3,7 +3,7 @@ const User = require('../../models/User');
 const Cliente = require('../../models/Cliente');
 const mongoose = require('mongoose');
 const { createJWT } = require('../../utils/jwt');
-
+const Empresa = require('../../models/Empresa')
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                         prueba                                             ////
@@ -124,9 +124,9 @@ const checkUser = (req, res) => {
 
 const getEmpresa = async(req, res) => {
     const { user: idUsuario, cliente: idCliente } = req;
-    const cliente = await Cliente.find({ "_id": idCliente}).populate('empresas.empresa');
+    const empresas = await Empresa.find({ "identificacion.cliente": idCliente});
     res.status(200).json({
-        data: cliente
+        data: empresas
     });
 }
 
