@@ -1,11 +1,12 @@
-const {Ingresos, Impuestos, IMSS} = require('../../utils/algorithms');
+const {Ingresos, Egresos, Impuestos, IMSS} = require('../../utils/algorithms');
 const {PDFtoArray} = require('../../utils/extras');
 const Operacion = require('../../models/Operacion');
 
 const constante = {
-    "emitida": (texto, idCliente, idUsuario) => Ingresos(texto).map((operacion) => ({
+    "emitida": (texto, idCliente, idUsuario, idEmpresa) => Ingresos(texto).map((operacion) => ({
                     identificacion: {
                         cliente: idCliente,
+                        empresa : idEmpresa,
                         usuario: idUsuario
                     },
                     tipo: operacion.tipo,
@@ -15,21 +16,23 @@ const constante = {
                     monto: operacion.total.replace('$','').replace(',',''),
                     fechaOperacion: operacion.fecha
                 })),
-    "recibida": (texto, idCliente, idUsuario) => Ingresos(texto).map((operacion) => ({
+    "recibida": (texto, idCliente, idUsuario, idEmpresa) => Egresos(texto).map((operacion) => ({
                     identificacion: {
                         cliente: idCliente,
+                        empresa : idEmpresa,
                         usuario: idUsuario
                     },
                     tipo: operacion.tipo,
-                    categoria: 'Ventas',
+                    categoria: 'Compras',
                     titulo: 'SAT',
                     descripcion: `Emitida para: ${operacion.receptor}`,
                     monto: operacion.total.replace('$','').replace(',',''),
                     fechaOperacion: operacion.fecha
                 })),
-    "impuestos": (texto, idCliente, idUsuario) => Impuestos(texto).map((operacion) => ({
+    "impuestos": (texto, idCliente, idUsuario, idEmpresa) => Impuestos(texto).map((operacion) => ({
                     identificacion: {
                         cliente: idCliente,
+                        empresa : idEmpresa,
                         usuario: idUsuario
                     },
                     tipo: operacion.tipo,
@@ -39,9 +42,10 @@ const constante = {
                     monto: operacion.total,
                     fechaOperacion: operacion.fecha
                 })),
-    "social": (texto, idCliente, idUsuario) => IMSS(texto).map((operacion) => ({
+    "social": (texto, idCliente, idUsuario, idEmpresa) => IMSS(texto).map((operacion) => ({
                     identificacion: {
                         cliente: idCliente,
+                        empresa : idEmpresa,
                         usuario: idUsuario
                     },
                     tipo: "Gasto",
@@ -65,6 +69,7 @@ const crearOperacion = async(req,res) => {
     const { user:idUsuario, cliente:idCliente} = req;
 
     const {titulo, descripcion, monto, tipo, categoria, fechaOperacion, idEmpresa } = req.body;
+
     const newOperacion = new Operacion({
         identificacion: {
             cliente: idCliente,
@@ -130,9 +135,9 @@ const getOperaciones = async(req,res) => {
 const getOperacionesByEmpresa = async(req,res) => {
     const { cliente:idCliente} = req;
     const idEmpresa  = req.body.empresa;
-
+    
     const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.empresa":idEmpresa });
-    console.log("empresa",idEmpresa)
+    console.log("empresa", idEmpresa)
     console.log("cliente",idCliente)
     console.log("operaciones", operaciones)
     res.status(200).json({
@@ -142,7 +147,7 @@ const getOperacionesByEmpresa = async(req,res) => {
 
 const uploadPDF = async(req,res) => {
     const { user:idUsuario, cliente:idCliente } = req;
-    const {tipo} = req.body;
+    const {tipo, idEmpresa} = req.body;
 
     //Get File
     const {file} = req.files;
@@ -151,7 +156,8 @@ const uploadPDF = async(req,res) => {
 
     const operaciones = constante[tipo]
     
-    const operaciones_resultado = operaciones(texto,idCliente,idUsuario);
+    const operaciones_resultado = operaciones(texto,idCliente,idUsuario,idEmpresa);
+    console.log(operaciones_resultado)
 
     const guardado = await Operacion.insertMany(operaciones_resultado);
 

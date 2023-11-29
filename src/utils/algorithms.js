@@ -2,7 +2,7 @@ const moment = require("moment")
 const { monthToNumber } = require("./extras")
 
 
-const Ingresos = (texto) => {
+const SAT = (texto) => {
     const listahora = []
     const total = []
     const fecha = []
@@ -73,7 +73,16 @@ const Ingresos = (texto) => {
             }
         }).filter((objeto) => Object.keys(objeto).length > 0)
     )
+}
 
+const Ingresos = (texto) => {
+    operaciones = SAT(texto)
+    return operaciones.map(operacion => ({...operacion, tipo: "Ingreso"}))
+}
+
+const Egresos = (texto) => {
+    operaciones = SAT(texto)
+    return operaciones.map(operacion => ({...operacion, tipo: "Gasto"}))
 }
 
 const Impuestos = (texto) => {
@@ -334,4 +343,4 @@ const IMSS = (texto) => {
     }])
 }
 
-module.exports = { Ingresos, Impuestos, IMSS }
+module.exports = { Ingresos, Egresos, Impuestos, IMSS }

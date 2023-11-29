@@ -21,32 +21,39 @@ const createUser = async(req, res) => {
 
     const {nombre, usuario, password, empresa} = req.body;
 
-    const existingUser = User.exists({usuario});
+    const existingUser = await User.exists({usuario});
 
     if(existingUser){
         res.status(400).json({
             error: 'User already exists.' 
         });
-    };
+    }else{
+        const hashPassword = await encryptPassword(password);
 
-    const hashPassword = await encryptPassword(password);
+        const cliente = await Cliente.findOne({
+            empresa
+        });
 
-    const cliente = await Cliente.findOne({
-        empresa
-    });
+        if(cliente){
 
-    const newUser = new User({
-        nombre,
-        usuario,
-        password: hashPassword,
-        cliente: cliente._id
-    });
+            const newUser = new User({
+                nombre,
+                usuario,
+                password: hashPassword,
+                cliente: cliente._id
+            });
 
-    const user = await newUser.save();
+            const user = await newUser.save();
 
-    res.status(200).json({
-        user 
-    });
+            res.status(200).json({
+                user 
+            });
+        }else{
+            res.status(400).json({
+                error: 'La empresa no existe.' 
+            });
+        }
+    }
 }
 
 
