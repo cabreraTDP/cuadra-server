@@ -132,6 +132,9 @@ const getOperacionesByEmpresa = async(req,res) => {
     const idEmpresa  = req.body.empresa;
 
     const operaciones = await Operacion.find({"identificacion.cliente":idCliente, "identificacion.empresa":idEmpresa });
+    console.log("empresa",idEmpresa)
+    console.log("cliente",idCliente)
+    console.log("operaciones", operaciones)
     res.status(200).json({
         data: operaciones
     });
